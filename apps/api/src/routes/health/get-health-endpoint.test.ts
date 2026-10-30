@@ -1,10 +1,25 @@
-import { describe, expect, it } from 'vitest'
-import { buildApp } from '../../app.ts'
+import { afterEach, beforeEach, describe, expect, it } from 'vitest'
+import { buildApp, type App } from '../../app.ts'
+import { testConfig } from '../../test/test-config.ts'
 
 describe('GET /health', () => {
-  it('returns ok', async () => {
-    const app = buildApp()
+  let app: App
 
+  // ----------------------------------------- SETUP -----------------------------------------------
+
+  beforeEach(() => {
+    app = buildApp(testConfig)
+  })
+
+  // ---------------------------------------- TEARDOWN ---------------------------------------------
+
+  afterEach(async () => {
+    await app.close()
+  })
+
+  // ----------------------------------------- TESTS -----------------------------------------------
+
+  it('returns ok', async () => {
     const response = await app.inject({ method: 'GET', url: '/health' })
 
     expect(response.statusCode).toBe(200)
