@@ -1,4 +1,7 @@
-import type { CreateParticipantBodySchema } from '@curebase/contracts/participants/create-participant-body-schema'
+import {
+  CreateParticipantBodySchema,
+  CreateParticipantResponseSchema,
+} from '@curebase/contracts/participants/create-participant'
 import type { FastifyReply, FastifyRequest } from 'fastify'
 import type { z } from 'zod'
 import { insertAuditEvent } from '../../data/audit-events/insert-audit-event.ts'
@@ -14,30 +17,36 @@ type Request = FastifyRequest<{ Body: z.infer<typeof CreateParticipantBodySchema
  * free and then race to insert, so we let the unique constraint decide and turn a
  * duplicate into a 409.
  */
-export async function createParticipantEndpoint(request: Request, reply: FastifyReply) {
-  const participant = await request.server.db.transaction(async (tx) => {
-    try {
-      const participant = await insertParticipant(tx, request.body)
-      await insertAuditEvent(tx, {
-        // Nobody is signed in yet. Once authentication exists, this becomes the user.
-        actor: 'anonymous',
-        action: 'participant.created',
-        entityType: 'participant',
-        entityId: participant.id,
-        // A new record has no previous values, so every field goes from null to what was sent.
-        changes: Object.fromEntries(
-          Object.entries(request.body).map(([field, value]) => [field, { from: null, to: value }]),
-        ),
-        requestId: request.id,
-      })
-      return participant
-    } catch (error) {
-      if (isUniqueViolation(error, 'participants_email_unique')) {
-        throw new ConflictError('A participant with this email already exists.')
+export const createParticipantEndpoint = {
+  schema: {
+    body: CreateParticipantBodySchema,
+    response: { 201: CreateParticipantResponseSchema },
+  },
+  async handler(request: Request, reply: FastifyReply) {
+    const participant = await request.server.db.transaction(async (tx) => {
+      try {
+        const participant = await insertParticipant(tx, request.body)
+        await insertAuditEvent(tx, {
+          // Nobody is signed in yet. Once authentication exists, this becomes the user.
+          actor: 'anonymous',
+          action: 'participant.created',
+          entityType: 'participant',
+          entityId: participant.id,
+          // A new record has no previous values, so every field goes from null to what was sent.
+          changes: Object.fromEntries(
+            Object.entries(request.body).map(([field, value]) => [field, { from: null, to: value }]),
+          ),
+          requestId: request.id,
+        })
+        return participant
+      } catch (error) {
+        if (isUniqueViolation(error, 'participants_email_unique')) {
+          throw new ConflictError('A participant with this email already exists.')
+        }
+        throw error
       }
-      throw error
-    }
-  })
+    })
 
-  return reply.code(201).send(participant)
+    return reply.code(201).send(participant)
+  },
 }

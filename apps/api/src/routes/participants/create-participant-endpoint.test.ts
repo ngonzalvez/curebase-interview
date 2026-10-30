@@ -37,6 +37,7 @@ describe('POST /participants', () => {
       heightCm: 180,
       weightKg: 81,
       bmi: expect.closeTo(25, 5),
+      createdAt: expect.any(String),
     })
   })
 
@@ -57,6 +58,7 @@ describe('POST /participants', () => {
       heightCm: null,
       weightKg: null,
       bmi: null,
+      createdAt: expect.any(String),
     })
   })
 

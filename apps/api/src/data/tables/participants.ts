@@ -19,6 +19,7 @@ export const participants = pgTable(
   },
   (table) => [
     index().on(table.bmi),
+    index().on(table.createdAt),
     check('participants_email_lowercase', sql`${table.email} = lower(${table.email})`),
     check('participants_height_cm_positive', sql`${table.heightCm} > 0`),
     check('participants_weight_kg_positive', sql`${table.weightKg} > 0`),

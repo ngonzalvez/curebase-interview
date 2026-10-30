@@ -1,16 +1,12 @@
-import { CreateParticipantBodySchema } from '@curebase/contracts/participants/create-participant-body-schema'
-import { ParticipantResponseSchema } from '@curebase/contracts/participants/participant-response-schema'
 import type { FastifyInstance } from 'fastify'
 import { createParticipantEndpoint } from './create-participant-endpoint.ts'
+import { listParticipantsEndpoint } from './list-participants-endpoint.ts'
 
 /**
- * Registers the participant routes, each with the schemas its requests are
- * validated against and its responses are shaped by.
+ * Maps the participant URLs to their endpoints. Each endpoint brings its own schemas
+ * and handler, so this file only says which method and path lead where.
  */
 export async function participantRoutes(app: FastifyInstance) {
-  app.post(
-    '/participants',
-    { schema: { body: CreateParticipantBodySchema, response: { 201: ParticipantResponseSchema } } },
-    createParticipantEndpoint,
-  )
+  app.get('/participants', listParticipantsEndpoint)
+  app.post('/participants', createParticipantEndpoint)
 }
