@@ -11,6 +11,11 @@
     "build": "npm run build --workspaces --if-present",
     "lint": "npm run lint --workspaces --if-present",
     "test": "npm run test --workspaces --if-present",
-    "typecheck": "npm run typecheck --workspaces --if-present"
+    "typecheck": "npm run typecheck --workspaces --if-present",
+    "format": "prettier --write apps packages",
+    "format:check": "prettier --check apps packages"
+  },
+  "devDependencies": {
+    "prettier": "^3.9.10"
   }
 }

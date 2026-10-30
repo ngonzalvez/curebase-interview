@@ -21,7 +21,9 @@ export function Pagination({ query, total }: Props) {
 
   return (
     <nav className={styles.pagination} aria-label="Pages">
-      {offset > 0 && <Link href={listHref(query, { offset: Math.max(offset - limit, 0) })}>← Previous</Link>}
+      {offset > 0 && (
+        <Link href={listHref(query, { offset: Math.max(offset - limit, 0) })}>← Previous</Link>
+      )}
       <span>
         {first}–{last} of {total}
       </span>

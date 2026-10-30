@@ -8,11 +8,18 @@ import { ApiError } from './api-error.ts'
  * Error answers become an ApiError. Responses are never cached: participant data
  * changes all the time and must not be shared between requests.
  */
-export async function request<T extends z.ZodType>(path: string, schema: T, init?: { method: string; body: unknown }) {
+export async function request<T extends z.ZodType>(
+  path: string,
+  schema: T,
+  init?: { method: string; body: unknown },
+) {
   const response = await fetch(new URL(path, process.env.NEXT_PUBLIC_API_URL), {
     method: init?.method ?? 'GET',
     cache: 'no-store',
-    ...(init && { headers: { 'content-type': 'application/json' }, body: JSON.stringify(init.body) }),
+    ...(init && {
+      headers: { 'content-type': 'application/json' },
+      body: JSON.stringify(init.body),
+    }),
   })
   const body = await response.json()
 

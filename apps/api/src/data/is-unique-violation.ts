@@ -6,5 +6,7 @@ import pg from 'pg'
  */
 export function isUniqueViolation(error: unknown, constraint: string) {
   const cause = error instanceof Error ? error.cause : undefined
-  return cause instanceof pg.DatabaseError && cause.code === '23505' && cause.constraint === constraint
+  return (
+    cause instanceof pg.DatabaseError && cause.code === '23505' && cause.constraint === constraint
+  )
 }

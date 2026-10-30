@@ -24,7 +24,10 @@ describe('toParticipantData', () => {
   })
 
   it('trims text and leaves blank fields out', () => {
-    const data = toParticipantData(formWith({ firstName: '  Ada  ', lastName: '   ', height: '' }), 'metric')
+    const data = toParticipantData(
+      formWith({ firstName: '  Ada  ', lastName: '   ', height: '' }),
+      'metric',
+    )
 
     expect(data.firstName).toBe('Ada')
     expect(data.lastName).toBeUndefined()

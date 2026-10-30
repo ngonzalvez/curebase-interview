@@ -17,10 +17,13 @@ export const ListParticipantsQuerySchema = z
     offset: z.coerce.number().int().min(0).default(0),
   })
   .strict()
-  .refine(({ minBmi, maxBmi }) => minBmi === undefined || maxBmi === undefined || minBmi <= maxBmi, {
-    message: 'Must be greater than or equal to minBmi',
-    path: ['maxBmi'],
-  })
+  .refine(
+    ({ minBmi, maxBmi }) => minBmi === undefined || maxBmi === undefined || minBmi <= maxBmi,
+    {
+      message: 'Must be greater than or equal to minBmi',
+      path: ['maxBmi'],
+    },
+  )
 
 /**
  * One page of participants, plus how many participants match the filters in total,

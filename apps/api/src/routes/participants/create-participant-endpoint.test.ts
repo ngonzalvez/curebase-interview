@@ -22,7 +22,8 @@ describe('POST /participants', () => {
   // ----------------------------------------- TESTS -----------------------------------------------
 
   // Registers a participant through the API, the same way the web form does.
-  const register = (payload: object) => app.inject({ method: 'POST', url: '/participants', payload })
+  const register = (payload: object) =>
+    app.inject({ method: 'POST', url: '/participants', payload })
 
   it('registers a participant and returns it with its BMI', async () => {
     const response = await register(validParticipant({ email: 'Ada@Example.com' }))
@@ -74,13 +75,25 @@ describe('POST /participants', () => {
 
     expect(response.statusCode).toBe(400)
     expect(response.json().errors.map((error: { path: string }) => error.path)).toEqual(
-      expect.arrayContaining(['firstName', 'lastName', 'phone', 'birthDate', 'heightCm', 'weightKg']),
+      expect.arrayContaining([
+        'firstName',
+        'lastName',
+        'phone',
+        'birthDate',
+        'heightCm',
+        'weightKg',
+      ]),
     )
   })
 
   it('rejects invalid values with the fields that are wrong', async () => {
     const response = await register(
-      validParticipant({ email: 'not-an-email', heightCm: 0, birthDate: '2999-01-01', nickname: 'ada' }),
+      validParticipant({
+        email: 'not-an-email',
+        heightCm: 0,
+        birthDate: '2999-01-01',
+        nickname: 'ada',
+      }),
     )
 
     expect(response.statusCode).toBe(400)
@@ -101,7 +114,10 @@ describe('POST /participants', () => {
   })
 
   it('registers only one participant when the same email arrives twice at once', async () => {
-    const responses = await Promise.all([register(validParticipant()), register(validParticipant())])
+    const responses = await Promise.all([
+      register(validParticipant()),
+      register(validParticipant()),
+    ])
 
     expect(responses.map((response) => response.statusCode).sort()).toEqual([201, 409])
     expect(await app.db.select().from(auditEvents)).toHaveLength(1)

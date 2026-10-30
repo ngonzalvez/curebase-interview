@@ -18,7 +18,11 @@ export function errorHandler(error: FastifyError, request: FastifyRequest, reply
 
   // Our own errors, whose status and message were written to be shown to the client.
   if (error instanceof AppError) {
-    return sendErrorResponse(reply, { status: error.statusCode, detail: error.message, errors: error.errors })
+    return sendErrorResponse(reply, {
+      status: error.statusCode,
+      detail: error.message,
+      errors: error.errors,
+    })
   }
 
   // Fastify's own client errors (malformed JSON, body too large, rate limited).

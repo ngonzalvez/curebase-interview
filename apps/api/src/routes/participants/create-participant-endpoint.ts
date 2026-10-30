@@ -34,7 +34,10 @@ export const createParticipantEndpoint = {
           entityId: participant.id,
           // A new record has no previous values, so every field goes from null to what was sent.
           changes: Object.fromEntries(
-            Object.entries(request.body).map(([field, value]) => [field, { from: null, to: value }]),
+            Object.entries(request.body).map(([field, value]) => [
+              field,
+              { from: null, to: value },
+            ]),
           ),
           requestId: request.id,
         })

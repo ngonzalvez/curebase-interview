@@ -10,7 +10,9 @@ type SearchParams = Record<string, string | string[] | undefined>
  */
 export function parseListQuery(searchParams: SearchParams) {
   const filled = Object.fromEntries(
-    Object.entries(searchParams).filter(([, value]) => typeof value === 'string' && value.trim() !== ''),
+    Object.entries(searchParams).filter(
+      ([, value]) => typeof value === 'string' && value.trim() !== '',
+    ),
   )
   return ListParticipantsQuerySchema.safeParse(filled)
 }

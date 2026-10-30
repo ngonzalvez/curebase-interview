@@ -30,7 +30,11 @@ describe('error handler', () => {
   // ----------------------------------------- TESTS -----------------------------------------------
 
   it('returns field errors for invalid requests', async () => {
-    const response = await app.inject({ method: 'POST', url: '/validated', payload: { email: 'nope' } })
+    const response = await app.inject({
+      method: 'POST',
+      url: '/validated',
+      payload: { email: 'nope' },
+    })
 
     expect(response.statusCode).toBe(400)
     expect(response.headers['content-type']).toContain('application/problem+json')

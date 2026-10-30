@@ -16,7 +16,9 @@ export async function setup() {
   const admin = new pg.Client({ connectionString: adminUrl.toString() })
   await admin.connect()
 
-  const { rowCount } = await admin.query('SELECT 1 FROM pg_database WHERE datname = $1', [testDbName])
+  const { rowCount } = await admin.query('SELECT 1 FROM pg_database WHERE datname = $1', [
+    testDbName,
+  ])
   if (!rowCount) await admin.query(`CREATE DATABASE "${testDbName}"`)
   await admin.end()
 

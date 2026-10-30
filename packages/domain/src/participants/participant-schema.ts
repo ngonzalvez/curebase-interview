@@ -15,7 +15,10 @@ export const ParticipantSchema = z.object({
   phone: z
     .string()
     .trim()
-    .regex(/^\+?[0-9 ()-]{7,20}$/, 'Use digits, spaces, dashes or brackets, with an optional leading +'),
+    .regex(
+      /^\+?[0-9 ()-]{7,20}$/,
+      'Use digits, spaces, dashes or brackets, with an optional leading +',
+    ),
   birthDate: z.iso.date().refine(isNotInTheFuture, 'Must not be in the future'),
   heightCm: z.number().positive(),
   weightKg: z.number().positive(),
