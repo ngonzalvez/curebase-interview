@@ -1,6 +1,13 @@
 import { ErrorResponseSchema } from '@curebase/contracts/errors/error-response'
 import type { z } from 'zod'
+import { toSearchParams } from '../lib/to-search-params.ts'
 import { ApiError } from './api-error.ts'
+
+type RequestOptions = {
+  method?: 'GET' | 'POST'
+  query?: Record<string, string | number | undefined>
+  body?: unknown
+}
 
 /**
  * Sends a request to the API and parses the answer with the endpoint's response
@@ -11,18 +18,21 @@ import { ApiError } from './api-error.ts'
 export async function request<T extends z.ZodType>(
   path: string,
   schema: T,
-  init?: { method: string; body: unknown },
+  { method = 'GET', query = {}, body }: RequestOptions = {},
 ) {
-  const response = await fetch(new URL(path, process.env.NEXT_PUBLIC_API_URL), {
-    method: init?.method ?? 'GET',
+  const url = new URL(path, process.env.NEXT_PUBLIC_API_URL)
+  url.search = toSearchParams(query).toString()
+
+  const response = await fetch(url, {
+    method,
     cache: 'no-store',
-    ...(init && {
+    ...(body !== undefined && {
       headers: { 'content-type': 'application/json' },
-      body: JSON.stringify(init.body),
+      body: JSON.stringify(body),
     }),
   })
-  const body = await response.json()
+  const json = await response.json()
 
-  if (!response.ok) throw new ApiError(ErrorResponseSchema.parse(body))
-  return schema.parse(body) as z.output<T>
+  if (!response.ok) throw new ApiError(ErrorResponseSchema.parse(json))
+  return schema.parse(json) as z.output<T>
 }

@@ -1,5 +1,6 @@
 import { ListParticipantsQuerySchema } from '@curebase/contracts/participants/list-participants'
 import type { ListParticipantsQuery } from '../../api/list-participants.ts'
+import { toSearchParams } from '../../lib/to-search-params.ts'
 
 type SearchParams = Record<string, string | string[] | undefined>
 
@@ -23,10 +24,5 @@ export function parseListQuery(searchParams: SearchParams) {
  * longer means anything once the filters or the order change.
  */
 export function listHref(query: ListParticipantsQuery, changes: Partial<ListParticipantsQuery>) {
-  const next = { ...query, offset: 0, ...changes }
-  const params = new URLSearchParams()
-  for (const [name, value] of Object.entries(next)) {
-    if (value !== undefined) params.set(name, String(value))
-  }
-  return `/?${params}`
+  return `/?${toSearchParams({ ...query, offset: 0, ...changes })}`
 }
