@@ -2,11 +2,12 @@
 
 import { CreateParticipantBodySchema } from '@curebase/contracts/participants/create-participant'
 import { useRouter } from 'next/navigation'
-import { type FormEvent, useState } from 'react'
+import { type FormEvent, useCallback, useState } from 'react'
 import { ApiError } from '../../api/api-error.ts'
 import { registerParticipant } from '../../api/register-participant.ts'
 import { Button } from '../ui/button.tsx'
 import { Field } from '../ui/field.tsx'
+import { Toast } from '../ui/toast.tsx'
 import styles from './registration-form.module.css'
 import { toParticipantData, type Units } from './to-participant-data.ts'
 
@@ -16,20 +17,23 @@ type FieldErrors = Record<string, string>
  * The form staff use to register a participant. It checks the data with the same
  * schema as the API, so most mistakes are caught before anything is sent. The API
  * still has the final word: a duplicate email or anything the browser missed comes
- * back as an error and is shown next to the field it belongs to. After a successful
- * registration the form clears and the list below refreshes.
+ * back as an error and is shown next to the field it belongs to, or under the button
+ * when it isn't about one field. After a successful registration the form clears, a
+ * toast confirms it, and the list below refreshes.
  */
 export function RegistrationForm() {
   const router = useRouter()
   const [units, setUnits] = useState<Units>('metric')
   const [errors, setErrors] = useState<FieldErrors>({})
-  const [message, setMessage] = useState<{ text: string; isError: boolean }>()
+  const [formError, setFormError] = useState<string>()
+  const [confirmation, setConfirmation] = useState<string>()
+  const dismissConfirmation = useCallback(() => setConfirmation(undefined), [])
   const [isSaving, setIsSaving] = useState(false)
 
   async function submit(event: FormEvent<HTMLFormElement>) {
     event.preventDefault()
     const form = event.currentTarget
-    setMessage(undefined)
+    setFormError(undefined)
 
     const parsed = CreateParticipantBodySchema.safeParse(
       toParticipantData(new FormData(form), units),
@@ -48,18 +52,15 @@ export function RegistrationForm() {
       const participant = await registerParticipant(parsed.data)
       form.reset()
       setErrors({})
-      setMessage({
-        text: `${participant.firstName} ${participant.lastName} was registered.`,
-        isError: false,
-      })
+      setConfirmation(`${participant.firstName} ${participant.lastName} was registered.`)
       router.refresh()
     } catch (error) {
       if (!(error instanceof ApiError)) {
-        setMessage({ text: 'The server could not be reached. Please try again.', isError: true })
+        setFormError('The server could not be reached. Please try again.')
         return
       }
       setErrors(Object.fromEntries(error.fieldErrors.map(({ path, message }) => [path, message])))
-      setMessage({ text: error.message, isError: true })
+      setFormError(error.message)
     } finally {
       setIsSaving(false)
     }
@@ -147,8 +148,9 @@ export function RegistrationForm() {
         <Button fullWidth disabled={isSaving}>
           {isSaving ? 'Saving…' : 'Save Participant'}
         </Button>
-        {message && <p role={message.isError ? 'alert' : 'status'}>{message.text}</p>}
+        {formError && <p role="alert">{formError}</p>}
       </div>
+      {confirmation && <Toast message={confirmation} onDismiss={dismissConfirmation} />}
     </form>
   )
 }
