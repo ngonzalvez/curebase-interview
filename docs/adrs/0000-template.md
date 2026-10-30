@@ -6,7 +6,7 @@
 
 ## Context
 
-<!-- The problem and the forces at play: requirements, constraints, what hurts. No solution yet. -->
+<!-- Facts only: what we need, the constraints, what we know. No decisions, recommendations or arguments for an option. Keep it short and end with what is being decided. -->
 
 ## Decision
 
