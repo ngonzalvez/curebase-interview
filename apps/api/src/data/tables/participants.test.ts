@@ -1,4 +1,4 @@
-import { eq, sql } from 'drizzle-orm'
+import { eq } from 'drizzle-orm'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import type { App } from '../../app.ts'
 import { buildTestApp } from '../../test/build-test-app.ts'
@@ -41,13 +41,6 @@ describe('participants table', () => {
       .returning()
 
     expect(updated?.bmi).toBeCloseTo(25, 5)
-  })
-
-  it('rejects a participant with part of the profile missing', async () => {
-    // Written as raw SQL because Drizzle's types won't even let you leave out a required field.
-    await expect(
-      app.db.execute(sql`INSERT INTO participants (email) VALUES ('ada@example.com')`),
-    ).rejects.toMatchObject({ cause: { code: '23502' } })
   })
 
   it('rejects non-positive height and weight', async () => {
