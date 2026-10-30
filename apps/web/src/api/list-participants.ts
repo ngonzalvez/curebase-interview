@@ -11,5 +11,5 @@ export type ListParticipantsQuery = z.output<typeof ListParticipantsQuerySchema>
  * Fetches one page of participants, filtered and sorted as the query says.
  */
 export function listParticipants(query: ListParticipantsQuery) {
-  return request('/participants', ListParticipantsResponseSchema, { query })
+  return request('/participants', { schema: ListParticipantsResponseSchema, query })
 }
