@@ -1,0 +1,35 @@
+{
+  "version": 1,
+  "skills": {
+    "critic-scalability": {
+      "source": "iampawan/Manifest",
+      "sourceType": "github",
+      "skillPath": "skills/critic-scalability/SKILL.md",
+      "computedHash": "5fa01efcf84847e1ef0d6cef5acdea446a084122f9e12260a161dfc2e3dad183"
+    },
+    "database-design-principles": {
+      "source": "Gdm0714/claude-code-resource",
+      "sourceType": "github",
+      "skillPath": "skills/database-design-principles/SKILL.md",
+      "computedHash": "74c412033a0dc75e0ac0d579c057b016c0d6719415df7ad10b1238cab6ce72d2"
+    },
+    "modularity-patterns": {
+      "source": "jdubray/puffin",
+      "sourceType": "github",
+      "skillPath": ".claude/skills/modularity-patterns/SKILL.md",
+      "computedHash": "93e75eaa885dac39b1912c23fa1aafc8e6e4eed43f12ede9fce15ec9057d0d7d"
+    },
+    "principle-soc": {
+      "source": "tikazyq/agentic-spec-forge",
+      "sourceType": "github",
+      "skillPath": "AGENTIC_SPEC_FORGE/spec_stage_skill/common_advanced/principle-soc/SKILL.md",
+      "computedHash": "fa51f8231305fb0f9586a9263875d55b10ab1fee01530d5771aa40c43a9bf34e"
+    },
+    "secure-by-design": {
+      "source": "RedHatProductSecurity/prodsec-skills",
+      "sourceType": "github",
+      "skillPath": "ge-core/secure-by-design/SKILL.md",
+      "computedHash": "2abe3fb8a4cf6e329be2ca601279a8b914c3d9bf287f564b293389e44ade280c"
+    }
+  }
+}
