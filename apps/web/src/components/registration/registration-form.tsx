@@ -31,9 +31,15 @@ export function RegistrationForm() {
     const form = event.currentTarget
     setMessage(undefined)
 
-    const parsed = CreateParticipantBodySchema.safeParse(toParticipantData(new FormData(form), units))
+    const parsed = CreateParticipantBodySchema.safeParse(
+      toParticipantData(new FormData(form), units),
+    )
     if (!parsed.success) {
-      setErrors(Object.fromEntries(parsed.error.issues.map((issue) => [String(issue.path[0]), issue.message])))
+      setErrors(
+        Object.fromEntries(
+          parsed.error.issues.map((issue) => [String(issue.path[0]), issue.message]),
+        ),
+      )
       return
     }
 
@@ -42,7 +48,10 @@ export function RegistrationForm() {
       const participant = await registerParticipant(parsed.data)
       form.reset()
       setErrors({})
-      setMessage({ text: `${participant.firstName} ${participant.lastName} was registered.`, isError: false })
+      setMessage({
+        text: `${participant.firstName} ${participant.lastName} was registered.`,
+        isError: false,
+      })
       router.refresh()
     } catch (error) {
       if (!(error instanceof ApiError)) {
@@ -61,27 +70,83 @@ export function RegistrationForm() {
 
   return (
     <form className={styles.form} onSubmit={submit} noValidate>
-      <Field label="First name" name="firstName" error={errors.firstName} autoComplete="off" />
-      <Field label="Last name" name="lastName" error={errors.lastName} autoComplete="off" />
-      <Field label="Email" name="email" type="email" error={errors.email} autoComplete="off" />
-      <Field label="Phone" name="phone" type="tel" error={errors.phone} autoComplete="off" />
-      <Field label="Date of birth" name="birthDate" type="date" error={errors.birthDate} />
+      <Field
+        className={styles.half}
+        label="First name"
+        name="firstName"
+        error={errors.firstName}
+        autoComplete="off"
+      />
+      <Field
+        className={styles.half}
+        label="Last name"
+        name="lastName"
+        error={errors.lastName}
+        autoComplete="off"
+      />
+      <Field
+        className={styles.half}
+        label="Email"
+        name="email"
+        type="email"
+        error={errors.email}
+        autoComplete="off"
+      />
+      <Field
+        className={styles.half}
+        label="Phone"
+        name="phone"
+        type="tel"
+        error={errors.phone}
+        autoComplete="off"
+      />
 
       <fieldset className={styles.units}>
         <legend>Units</legend>
         <label className={styles.unit}>
-          <input type="radio" checked={units === 'metric'} onChange={() => setUnits('metric')} /> cm / kg
+          <input type="radio" checked={units === 'metric'} onChange={() => setUnits('metric')} /> cm
+          / kg
         </label>
         <label className={styles.unit}>
-          <input type="radio" checked={units === 'imperial'} onChange={() => setUnits('imperial')} /> in / lbs
+          <input
+            type="radio"
+            checked={units === 'imperial'}
+            onChange={() => setUnits('imperial')}
+          />{' '}
+          in / lbs
         </label>
       </fieldset>
 
-      <Field label={height} name="height" type="number" step="0.1" min="0" error={errors.heightCm} />
-      <Field label={weight} name="weight" type="number" step="0.1" min="0" error={errors.weightKg} />
+      <Field
+        className={styles.third}
+        label={weight}
+        name="weight"
+        type="number"
+        step="0.1"
+        min="0"
+        error={errors.weightKg}
+      />
+      <Field
+        className={styles.third}
+        label={height}
+        name="height"
+        type="number"
+        step="0.1"
+        min="0"
+        error={errors.heightCm}
+      />
+      <Field
+        className={styles.third}
+        label="Date of birth"
+        name="birthDate"
+        type="date"
+        error={errors.birthDate}
+      />
 
       <div className={styles.actions}>
-        <Button disabled={isSaving}>{isSaving ? 'Saving…' : 'Register participant'}</Button>
+        <Button fullWidth disabled={isSaving}>
+          {isSaving ? 'Saving…' : 'Save Participant'}
+        </Button>
         {message && <p role={message.isError ? 'alert' : 'status'}>{message.text}</p>}
       </div>
     </form>

@@ -10,8 +10,8 @@ type Props = {
 }
 
 /**
- * The participants list: the BMI filter, one page of the table and the links to the
- * other pages. It renders on the server for every request, so the data is always
+ * The participants list: one page of the table, the links to the other pages and the
+ * BMI filter. It renders on the server for every request, so the data is always
  * current, and filtering or paging is just following a link to a new URL.
  */
 export async function Participants({ searchParams }: Props) {
@@ -23,15 +23,16 @@ export async function Participants({ searchParams }: Props) {
   const query = parsed.data
   const page = await listParticipants(query).catch((error: unknown) => ({ error }))
   if ('error' in page) {
-    const message = page.error instanceof ApiError ? page.error.message : 'The participants could not be loaded.'
+    const message =
+      page.error instanceof ApiError ? page.error.message : 'The participants could not be loaded.'
     return <p role="alert">{message}</p>
   }
 
   return (
     <>
-      <BmiFilter query={query} />
       <ParticipantsTable participants={page.items} query={query} />
       <Pagination query={query} total={page.total} />
+      <BmiFilter query={query} />
     </>
   )
 }

@@ -1,33 +1,22 @@
 /*
- * Colors. Components refer to these by purpose, never by value, so switching to dark
- * mode only means changing them here.
+ * Colors, matching the dark navy look of the design in the brief. Components refer to
+ * these by purpose, never by value, so a light theme would only need to change them here.
  */
 
 :root {
-  --color-background: #ffffff;
-  --color-text: #171717;
-  --color-text-muted: #6b7280;
-  --color-border: #e5e7eb;
-  --color-accent: #2563eb;
-  --color-on-accent: #ffffff;
-  --color-danger: #dc2626;
-  --color-success: #16a34a;
+  --color-background: #111827;
+  --color-surface: #374151;
+  --color-border: #4b5563;
+  --color-text: #f9fafb;
+  --color-text-muted: #9ca3af;
+  --color-primary: #3b82f6;
+  --color-secondary: #10b981;
+  --color-on-button: #ffffff;
+  --color-danger: #f87171;
+  --color-success: #34d399;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --color-background: #0a0a0a;
-    --color-text: #ededed;
-    --color-text-muted: #9ca3af;
-    --color-border: #27272a;
-    --color-accent: #3b82f6;
-    --color-on-accent: #ffffff;
-    --color-danger: #f87171;
-    --color-success: #4ade80;
-  }
-
-  /* Lets the browser draw its own controls, like date pickers, in dark colors too. */
-  html {
-    color-scheme: dark;
-  }
+/* Lets the browser draw its own controls, like the date picker, in dark colors too. */
+html {
+  color-scheme: dark;
 }

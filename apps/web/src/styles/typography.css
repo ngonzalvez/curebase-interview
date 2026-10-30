@@ -4,6 +4,7 @@
   --font-sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
   --font-mono: var(--font-geist-mono), monospace;
 
+  --text-xs: 12px;
   --text-sm: 14px;
   --text-md: 16px;
   --text-lg: 18px;

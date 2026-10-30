@@ -1,25 +1,19 @@
-.filter {
-  display: flex;
-  flex-wrap: wrap;
-  gap: var(--space-3);
-  align-items: end;
-  margin-bottom: var(--space-4);
-}
-
 .table {
   width: 100%;
   border-collapse: collapse;
-  font-size: var(--text-sm);
+  border: 1px solid var(--color-border);
+  font-size: var(--text-xs);
 }
 
 .table th,
 .table td {
-  padding: var(--space-2);
-  border-bottom: 1px solid var(--color-border);
+  padding: var(--space-2) var(--space-3);
+  border: 1px solid var(--color-border);
   text-align: left;
 }
 
 .table th {
+  background: var(--color-surface);
   font-weight: var(--weight-semibold);
 }
 
@@ -33,10 +27,22 @@
   display: flex;
   gap: var(--space-4);
   justify-content: center;
-  margin-top: var(--space-4);
+  margin-top: var(--space-3);
   font-size: var(--text-sm);
 }
 
 .pagination a {
-  color: var(--color-accent);
+  color: var(--color-primary);
+}
+
+.filter {
+  display: flex;
+  flex-direction: column;
+  gap: var(--space-2);
+  margin-top: var(--space-4);
+}
+
+/* The table has more columns than a phone screen is wide, so it scrolls sideways there. */
+.scroll {
+  overflow-x: auto;
 }

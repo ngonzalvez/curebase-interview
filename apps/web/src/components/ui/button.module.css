@@ -2,11 +2,23 @@
   padding: var(--space-2) var(--space-4);
   border: none;
   border-radius: var(--radius);
-  background: var(--color-accent);
-  color: var(--color-on-accent);
+  color: var(--color-on-button);
   font: inherit;
+  font-size: var(--text-sm);
   font-weight: var(--weight-semibold);
   cursor: pointer;
+}
+
+.primary {
+  background: var(--color-primary);
+}
+
+.secondary {
+  background: var(--color-secondary);
+}
+
+.fullWidth {
+  width: 100%;
 }
 
 .button:disabled {

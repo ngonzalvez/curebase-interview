@@ -32,7 +32,9 @@ export function BmiFilter({ query }: { query: ListParticipantsQuery }) {
       />
       <input type="hidden" name="sort" value={query.sort} />
       <input type="hidden" name="order" value={query.order} />
-      <Button>Filter</Button>
+      <div>
+        <Button variant="secondary">Filter</Button>
+      </div>
     </Form>
   )
 }

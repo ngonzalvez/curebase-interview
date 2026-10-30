@@ -11,12 +11,9 @@ import styles from './page.module.css'
 export default function Home({ searchParams }: PageProps<'/'>) {
   return (
     <main className={styles.main}>
-      <h1>Clinical trial participants</h1>
+      <h1>Clinical Trial Participant Capture</h1>
 
-      <section>
-        <h2>Register a participant</h2>
-        <RegistrationForm />
-      </section>
+      <RegistrationForm />
 
       <section>
         <h2>Participants</h2>
