@@ -10,7 +10,7 @@
 
 ## Decision
 
-<!-- What we will do, stated as rules. Use "we will". Include short code or SQL only when it makes the rule unambiguous. -->
+<!-- What we will do, stated as rules, and why we chose it. Use "we will". Include short code or SQL only when it makes the rule unambiguous. -->
 
 ## Consequences
 
