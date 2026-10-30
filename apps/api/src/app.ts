@@ -8,6 +8,7 @@ import { sendErrorResponse } from './errors/send-error-response.ts'
 import { databasePlugin } from './plugins/database.ts'
 import { errorHandler } from './plugins/error-handler.ts'
 import { healthRoutes } from './routes/health/index.ts'
+import { participantRoutes } from './routes/participants/index.ts'
 
 /**
  * Builds the API with everything wired up, but doesn't start listening. That's what
@@ -45,6 +46,7 @@ export function buildApp(config: Config) {
 
   // Routes: one plugin per resource.
   app.register(healthRoutes)
+  app.register(participantRoutes)
 
   return app
 }
