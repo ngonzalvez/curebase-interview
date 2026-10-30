@@ -1,0 +1,25 @@
+.form {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
+  gap: 16px;
+}
+
+.units {
+  display: flex;
+  gap: 16px;
+  align-items: center;
+  border: none;
+  font-size: 14px;
+}
+
+.units label {
+  flex-direction: row;
+  align-items: center;
+}
+
+.actions {
+  grid-column: 1 / -1;
+  display: flex;
+  gap: 16px;
+  align-items: center;
+}
