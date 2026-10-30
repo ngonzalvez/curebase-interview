@@ -70,20 +70,18 @@ describe('POST /participants', () => {
     ])
   })
 
-  it('rejects a registration with part of the profile missing', async () => {
+  it('says which fields are missing, in words a person can act on', async () => {
     const response = await register({ email: 'ada@example.com' })
 
     expect(response.statusCode).toBe(400)
-    expect(response.json().errors.map((error: { path: string }) => error.path)).toEqual(
-      expect.arrayContaining([
-        'firstName',
-        'lastName',
-        'phone',
-        'birthDate',
-        'heightCm',
-        'weightKg',
-      ]),
-    )
+    expect(response.json().errors).toEqual([
+      { path: 'firstName', message: 'First name is required' },
+      { path: 'lastName', message: 'Last name is required' },
+      { path: 'phone', message: 'Phone is required' },
+      { path: 'birthDate', message: 'Date of birth is required' },
+      { path: 'heightCm', message: 'Height is required' },
+      { path: 'weightKg', message: 'Weight is required' },
+    ])
   })
 
   it('rejects invalid values with the fields that are wrong', async () => {
