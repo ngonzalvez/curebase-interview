@@ -5,11 +5,15 @@ import Fastify from 'fastify'
 import { serializerCompiler, validatorCompiler, type ZodTypeProvider } from 'fastify-type-provider-zod'
 import type { Config } from './config.ts'
 import { sendErrorResponse } from './errors/send-error-response.ts'
+import { databasePlugin } from './plugins/database.ts'
 import { errorHandler } from './plugins/error-handler.ts'
 import { healthRoutes } from './routes/health/index.ts'
 
-// Builds the app without starting it, so tests can call it with app.inject().
-// The config is passed in, so tests never depend on environment variables.
+/**
+ * Builds the API with everything wired up, but doesn't start listening. That's what
+ * lets tests send requests with app.inject() and no real server. The config comes
+ * in as an argument, so tests never depend on environment variables either.
+ */
 export function buildApp(config: Config) {
   // Logging: Fastify's request logs omit headers and bodies by default.
   // The redact list masks sensitive fields if anything logs them by hand.
@@ -20,8 +24,12 @@ export function buildApp(config: Config) {
     },
   }).withTypeProvider<ZodTypeProvider>()
 
-  // Schemas: routes declare Zod schemas. Requests are validated against them,
-  // and responses are serialized through them, which drops undeclared fields.
+  // Database: endpoints reach Postgres through app.db (request.server.db).
+  app.register(databasePlugin, { url: config.databaseUrl })
+
+  // Schemas: each route declares Zod schemas for what it accepts and what it returns.
+  // Requests that don't match are rejected, and any response field the schema doesn't
+  // declare is dropped before it leaves the API.
   app.setValidatorCompiler(validatorCompiler)
   app.setSerializerCompiler(serializerCompiler)
 

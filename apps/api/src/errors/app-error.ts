@@ -1,6 +1,9 @@
 export type FieldError = { path: string; message: string }
 
-// Base class for errors whose status and message are safe to send to clients.
+/**
+ * The base for errors we throw on purpose. Their status and message are written for
+ * the client, so the error handler sends them as they are, along with any field errors.
+ */
 export class AppError extends Error {
   readonly statusCode: number
   readonly errors: FieldError[]

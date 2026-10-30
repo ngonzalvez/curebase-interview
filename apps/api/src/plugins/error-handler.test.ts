@@ -1,23 +1,23 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import { z } from 'zod'
-import { buildApp, type App } from '../app.ts'
+import type { App } from '../app.ts'
 import { ConflictError } from '../errors/conflict-error.ts'
-import { testConfig } from '../test/test-config.ts'
+import { buildTestApp } from '../test/build-test-app.ts'
 
 describe('error handler', () => {
   let app: App
 
   // ----------------------------------------- SETUP -----------------------------------------------
 
-  beforeEach(() => {
-    app = buildApp(testConfig)
-
-    app.post('/validated', { schema: { body: z.object({ email: z.email() }) } }, async () => ({}))
-    app.get('/conflict', async () => {
-      throw new ConflictError('Email already registered.')
-    })
-    app.get('/crash', async () => {
-      throw new Error('connection string postgres://secret')
+  beforeEach(async () => {
+    app = await buildTestApp((app) => {
+      app.post('/validated', { schema: { body: z.object({ email: z.email() }) } }, async () => ({}))
+      app.get('/conflict', async () => {
+        throw new ConflictError('Email already registered.')
+      })
+      app.get('/crash', async () => {
+        throw new Error('connection string postgres://secret')
+      })
     })
   })
 

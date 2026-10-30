@@ -4,16 +4,8 @@ import { AppError } from '../errors/app-error.ts'
 import { sendErrorResponse } from '../errors/send-error-response.ts'
 
 /**
- * Fastify's global error handler. Every error thrown by a route or plugin ends here
- * and is turned into an RFC 9457 Problem Details response, so clients always get the
- * same error shape and never see internal details.
- *
- * - Request validation errors (Zod): 400 with the path and message of each invalid field.
- * - AppError subclasses (ValidationError, NotFoundError, ConflictError): their own
- *   status and message, which are written to be safe for clients.
- * - Fastify's own client errors (malformed JSON, body too large, rate limited):
- *   the status only, because their messages can echo request content.
- * - Anything else: logged with full details, and returned as a bare 500.
+ * Every error thrown by a route ends up here. Whatever went wrong, the client gets
+ * the same Problem Details shape back, and never anything internal like a stack trace.
  */
 export function errorHandler(error: FastifyError, request: FastifyRequest, reply: FastifyReply) {
   if (hasZodFastifySchemaValidationErrors(error)) {
@@ -24,6 +16,7 @@ export function errorHandler(error: FastifyError, request: FastifyRequest, reply
     return sendErrorResponse(reply, { status: 400, detail: 'The request is invalid.', errors })
   }
 
+  // Our own errors, whose status and message were written to be shown to the client.
   if (error instanceof AppError) {
     return sendErrorResponse(reply, { status: error.statusCode, detail: error.message, errors: error.errors })
   }
@@ -34,6 +27,8 @@ export function errorHandler(error: FastifyError, request: FastifyRequest, reply
     return sendErrorResponse(reply, { status: error.statusCode })
   }
 
+  // Anything else is a bug. We log the full error for ourselves, and the client
+  // only learns that something went wrong on our side.
   request.log.error({ err: error }, 'Unhandled error')
   return sendErrorResponse(reply, { status: 500 })
 }

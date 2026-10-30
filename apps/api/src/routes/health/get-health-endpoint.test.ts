@@ -1,14 +1,14 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
-import { buildApp, type App } from '../../app.ts'
-import { testConfig } from '../../test/test-config.ts'
+import type { App } from '../../app.ts'
+import { buildTestApp } from '../../test/build-test-app.ts'
 
 describe('GET /health', () => {
   let app: App
 
   // ----------------------------------------- SETUP -----------------------------------------------
 
-  beforeEach(() => {
-    app = buildApp(testConfig)
+  beforeEach(async () => {
+    app = await buildTestApp()
   })
 
   // ---------------------------------------- TEARDOWN ---------------------------------------------
