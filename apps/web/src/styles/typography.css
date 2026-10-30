@@ -1,8 +1,7 @@
-/* Typography. The font families come from next/font, which sets the --font-geist variables. */
+/* Typography. The font comes from next/font, which sets the --font-geist-sans variable. */
 
 :root {
   --font-sans: var(--font-geist-sans), Arial, Helvetica, sans-serif;
-  --font-mono: var(--font-geist-mono), monospace;
 
   --text-xs: 12px;
   --text-sm: 14px;
