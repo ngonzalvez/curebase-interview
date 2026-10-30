@@ -8,6 +8,13 @@
 
 We need to decide which HTTP framework to use for `apps/api`.
 
+## Options considered
+
+- **Fastify.** Mature, with Zod schema support, a built-in logger that redacts listed fields, and response filtering. Its plugin and hook model takes some learning.
+- **Hono.** Light and has a typed client, but no response filtering and minimal logging. It runs anywhere, which we don't need.
+- **NestJS.** Strong structure, but built on classes, decorators and dependency injection, which add abstraction and are harder to audit.
+- **Express 5.** The most familiar, but validation, response filtering and log redaction are all add-ons we would have to remember.
+
 ## Decision
 
 We will use Fastify.
@@ -27,9 +34,3 @@ We chose it because:
 - Log redaction paths must be kept up to date as fields are added.
 - Developers need to learn Fastify's plugin and hook model.
 - The API runs on Node.js only.
-
-## Alternatives considered
-
-- **Hono.** Light and has a typed client, but no response filtering and minimal logging. Its ability to run anywhere is something we don't need.
-- **NestJS.** Strong structure, but built on classes, decorators and dependency injection, which add a lot of abstraction and are harder to audit.
-- **Express 5.** The most familiar, but validation, response filtering and log redaction are all add-ons we would have to remember.

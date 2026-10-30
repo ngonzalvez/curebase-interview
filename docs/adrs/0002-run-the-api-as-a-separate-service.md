@@ -10,9 +10,15 @@ Staff use a web UI to collect health data from clinical trial participants, and 
 
 We need to decide whether to deploy them as one app or two.
 
+## Options considered
+
+- **One Next.js app serving UI and API.** Simplest to run, but database access and secrets share a process and a codebase with the UI, so keeping server code out of UI bundles depends on discipline.
+- **Separate UI and API apps, browser calls the API directly.** Server code can never reach a UI bundle, and the API scales on its own. The API is reachable from the internet and two apps must be deployed.
+- **Separate apps, web proxies to an API on a private network.** Keeps the API off the internet, but adds a proxy hop and setup.
+
 ## Decision
 
-We will run the UI and the API as separate apps:
+We will run the UI and the API as separate apps, and the browser will call the API directly:
 
 ```
 apps/web             UI. No database access.
@@ -21,7 +27,7 @@ packages/domain      business rules shared by both apps
 packages/contracts   API request and response schemas shared by both apps
 ```
 
-The browser calls the API directly, with CORS restricted to the web app's origin. The web app's server also calls the API to render pages.
+CORS is restricted to the web app's origin. The web app's server also calls the API to render pages.
 
 We chose this because the data is sensitive, and security by design calls for making leaks impossible rather than relying on discipline. With the API in its own app, a wrong import cannot put sensitive server code into a UI bundle, and UI code can never reach the database or its credentials. It also lets the API scale on its own and serve future clients, such as a participant app.
 
@@ -32,8 +38,3 @@ We chose this because the data is sensitive, and security by design calls for ma
 - The API can scale and deploy independently of the UI.
 - The API is reachable from the internet, so it handles authentication, CORS and rate limiting itself.
 - Two apps to build, deploy and monitor.
-
-## Alternatives considered
-
-- **One Next.js app serving UI and API.** Simpler to run, but database access and secrets share a process and a codebase with the UI.
-- **Web proxies to an API on a private network.** Keeps the API off the internet, but adds a proxy hop and setup.

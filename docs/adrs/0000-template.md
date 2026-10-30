@@ -6,16 +6,16 @@
 
 ## Context
 
-<!-- Facts only: what we need, the constraints, what we know. No decisions, recommendations or arguments for an option. Keep it short and end with what is being decided. -->
+<!-- Facts only, usually one line naming what we need to decide. No arguments for any option. -->
+
+## Options considered
+
+<!-- Every option, including the one we chose. One bullet each: what it is, its pros and its cons. -->
 
 ## Decision
 
-<!-- What we will do, stated as rules, and why we chose it. Use "we will". Include short code or SQL only when it makes the rule unambiguous. -->
+<!-- Which option we chose, the rules it implies, and why we chose it. Use "we will". -->
 
 ## Consequences
 
 <!-- What gets easier, what gets harder, what we now have to maintain. Both sides. -->
-
-## Alternatives considered
-
-<!-- One bullet per option: what it was, and why we did not pick it. -->

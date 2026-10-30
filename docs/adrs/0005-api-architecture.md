@@ -8,6 +8,13 @@
 
 We need to decide how code inside `apps/api` is organized and where authentication, authorization and auditing will live.
 
+## Options considered
+
+- **Endpoints and data functions, one function per file.** Small files that are easy to find and test. Many files.
+- **A service layer between endpoints and data.** Lets non-HTTP callers reuse use cases, but we have none.
+- **Organize by feature** (`modules/participants/{routes,data}`). Keeps a feature together, but is more structure than a few resources need.
+- **One file per resource** (`data/participants.ts`). Fewer files, but they grow large and mix unrelated functions.
+
 ## Decision
 
 We will organize `apps/api/src/` in two layers, with a folder per resource and one function per file:
@@ -41,9 +48,3 @@ We chose it because:
 
 - Many small files.
 - If a second entry point appears, use cases move from endpoints into services.
-
-## Alternatives considered
-
-- **A service layer.** Lets non-HTTP callers reuse use cases, but we have none.
-- **Organize by feature** (`modules/participants/{routes,data}`). More structure than a few resources need.
-- **One file per resource** (`data/participants.ts`). Files grow large and mix unrelated functions.

@@ -12,6 +12,14 @@ Later we may need a participant-facing app, and we may need to run the backend a
 
 We need to decide how the repository is organized to hold one app now and possibly more later.
 
+## Options considered
+
+- **A single Next.js app with no workspaces.** The simplest option today, but a second app or a backend split would require restructuring the repo later, when more code depends on its layout.
+- **One repository per app, shared code published as private npm packages.** Independent deploys and access control, but every shared change needs publishing, versioning and coordination across repos, and client and server schemas can drift apart. With health data, that drift is a correctness and safety risk.
+- **An npm workspaces monorepo.** All apps and shared code in one repo, with no extra tooling. Developers can read code from apps they don't work on.
+- **pnpm workspaces.** Stricter dependency isolation and faster installs, but another tool to adopt.
+- **Turborepo or Nx on top of workspaces.** Task caching and affected-only builds, but more tooling than one or two apps need.
+
 ## Decision
 
 We will keep all apps and shared code in one repository, managed with npm workspaces.
@@ -25,7 +33,8 @@ packages/    code shared by two or more apps    (@curebase/<name>)
 - There is one lockfile, at the root. Dependencies are installed from the root.
 - Root scripts delegate to the workspaces (`npm run build --workspaces --if-present`).
 - Code moves into `packages/` only when a second workspace consumes it. Until then it lives inside the app that uses it.
-- How packages are built and consumed (TypeScript source or compiled output) is decided when the first package is created.
+
+We chose it because a shared change lands in one commit across every app, without publishing packages or adding tools we don't need yet.
 
 ## Consequences
 
@@ -38,10 +47,3 @@ packages/    code shared by two or more apps    (@curebase/<name>)
   - `main` is protected, with required reviews and CODEOWNERS on sensitive paths;
   - deploys and production access are restricted separately from code access.
 - If some code must not be readable by every developer (for example vendor code under NDA, or contractors limited to one app), that part moves to its own repository and is consumed as a private package.
-
-## Alternatives considered
-
-- **A single Next.js app with no workspaces.** The simplest option today, but the expected second app and backend split would require restructuring the repo later, at a point when more code depends on its layout.
-- **One repository per app, shared code published as private npm packages.** Independent deploys and access control, but every shared change needs publishing, versioning and coordination across repos, and client and server schemas can drift apart. With health data, that drift is a correctness and safety risk.
-- **pnpm workspaces.** Stricter dependency isolation and faster installs. Not worth adding another tool while npm workspaces covers our needs.
-- **Turborepo or Nx on top of workspaces.** Task caching and affected-only builds. Not needed with one app; we can add one when build times justify it.
