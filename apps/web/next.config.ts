@@ -1,9 +1,16 @@
-import type { NextConfig } from "next";
+import type { NextConfig } from 'next'
+
+// Every app reads the same .env at the root of the repo. In CI or production there's
+// no file, and the variables come from the environment instead.
+try {
+  process.loadEnvFile('../../.env')
+} catch {}
 
 const nextConfig: NextConfig = {
-  /* config options here */
   cacheComponents: true,
   partialPrefetching: true,
-};
+  // The shared packages are plain TypeScript, so Next.js has to compile them too.
+  transpilePackages: ['@curebase/contracts', '@curebase/domain'],
+}
 
-export default nextConfig;
+export default nextConfig
