@@ -1,4 +1,22 @@
+# Dependencies
 node_modules/
-.DS_Store
-.env*
+
+# Build and test output
+dist/
+coverage/
 *.tsbuildinfo
+
+# Environment (keep the example)
+.env*
+!.env.example
+
+# Logs
+*.log
+
+# OS and local tool settings
+.DS_Store
+.claude/settings.local.json
+
+# Installed agent skills (see skills-lock.json)
+.agents/skills/
+.claude/skills/
