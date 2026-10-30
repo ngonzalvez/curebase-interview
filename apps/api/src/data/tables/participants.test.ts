@@ -1,7 +1,8 @@
-import { eq } from 'drizzle-orm'
+import { eq, sql } from 'drizzle-orm'
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import type { App } from '../../app.ts'
 import { buildTestApp } from '../../test/build-test-app.ts'
+import { validParticipant } from '../../test/valid-participant.ts'
 import { participants } from './participants.ts'
 
 describe('participants table', () => {
@@ -22,10 +23,7 @@ describe('participants table', () => {
   // ----------------------------------------- TESTS -----------------------------------------------
 
   it('computes BMI from height and weight', async () => {
-    const [row] = await app.db
-      .insert(participants)
-      .values({ email: 'ada@example.com', heightCm: 180, weightKg: 81 })
-      .returning()
+    const [row] = await app.db.insert(participants).values(validParticipant()).returning()
 
     expect(row?.bmi).toBeCloseTo(25, 5)
   })
@@ -33,7 +31,7 @@ describe('participants table', () => {
   it('recomputes BMI when weight changes', async () => {
     const [row] = await app.db
       .insert(participants)
-      .values({ email: 'ada@example.com', heightCm: 200, weightKg: 80 })
+      .values(validParticipant({ heightCm: 200, weightKg: 80 }))
       .returning()
 
     const [updated] = await app.db
@@ -45,31 +43,32 @@ describe('participants table', () => {
     expect(updated?.bmi).toBeCloseTo(25, 5)
   })
 
-  it('leaves BMI empty until height and weight are set', async () => {
-    const [row] = await app.db.insert(participants).values({ email: 'ada@example.com' }).returning()
-
-    expect(row?.bmi).toBeNull()
+  it('rejects a participant with part of the profile missing', async () => {
+    // Written as raw SQL because Drizzle's types won't even let you leave out a required field.
+    await expect(
+      app.db.execute(sql`INSERT INTO participants (email) VALUES ('ada@example.com')`),
+    ).rejects.toMatchObject({ cause: { code: '23502' } })
   })
 
   it('rejects non-positive height and weight', async () => {
     await expect(
-      app.db.insert(participants).values({ email: 'ada@example.com', heightCm: 0, weightKg: 70 }),
+      app.db.insert(participants).values(validParticipant({ heightCm: 0 })),
     ).rejects.toMatchObject({ cause: { constraint: 'participants_height_cm_positive' } })
     await expect(
-      app.db.insert(participants).values({ email: 'ada@example.com', heightCm: 170, weightKg: -1 }),
+      app.db.insert(participants).values(validParticipant({ weightKg: -1 })),
     ).rejects.toMatchObject({ cause: { constraint: 'participants_weight_kg_positive' } })
   })
 
   it('rejects emails that are not lowercase', async () => {
-    await expect(app.db.insert(participants).values({ email: 'Ada@Example.com' })).rejects.toMatchObject({
-      cause: { constraint: 'participants_email_lowercase' },
-    })
+    await expect(
+      app.db.insert(participants).values(validParticipant({ email: 'Ada@Example.com' })),
+    ).rejects.toMatchObject({ cause: { constraint: 'participants_email_lowercase' } })
   })
 
   it('rejects duplicate emails', async () => {
-    await app.db.insert(participants).values({ email: 'ada@example.com' })
+    await app.db.insert(participants).values(validParticipant())
 
-    await expect(app.db.insert(participants).values({ email: 'ada@example.com' })).rejects.toMatchObject({
+    await expect(app.db.insert(participants).values(validParticipant())).rejects.toMatchObject({
       cause: { constraint: 'participants_email_unique' },
     })
   })

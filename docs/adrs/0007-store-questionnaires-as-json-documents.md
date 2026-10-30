@@ -1,8 +1,10 @@
 # 0007. Store questionnaires as JSON documents
 
-- Status: Accepted
+- Status: Rejected
 - Date: 2026-10-30
 - Related: [0004](0004-use-zod-for-validation.md), [0006](0006-use-drizzle-for-data-access.md)
+
+> Rejected before implementation. The app only needs a fixed participant registration form, so dynamic questionnaires added complexity the brief does not ask for. Revisit if participants have to answer configurable forms.
 
 ## Context
 

@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import type { App } from '../../app.ts'
 import { participants } from '../../data/tables/participants.ts'
 import { buildTestApp } from '../../test/build-test-app.ts'
+import { validParticipant } from '../../test/valid-participant.ts'
 
 describe('GET /participants', () => {
   let app: App
@@ -17,12 +18,13 @@ describe('GET /participants', () => {
   beforeEach(async () => {
     app = await buildTestApp()
 
-    // BMIs: low 20, mid 25, high 30, and one participant without height or weight.
+    // Everyone is 2 m tall, so the weights give BMIs of exactly 20, 25, 30 and 35.
+    // They registered a day apart, in that same order.
     await app.db.insert(participants).values([
-      { email: 'low@example.com', heightCm: 200, weightKg: 80, createdAt: new Date('2026-01-01') },
-      { email: 'mid@example.com', heightCm: 200, weightKg: 100, createdAt: new Date('2026-01-02') },
-      { email: 'high@example.com', heightCm: 200, weightKg: 120, createdAt: new Date('2026-01-03') },
-      { email: 'empty@example.com', createdAt: new Date('2026-01-04') },
+      validParticipant({ email: 'low@example.com', heightCm: 200, weightKg: 80, createdAt: new Date('2026-01-01') }),
+      validParticipant({ email: 'mid@example.com', heightCm: 200, weightKg: 100, createdAt: new Date('2026-01-02') }),
+      validParticipant({ email: 'high@example.com', heightCm: 200, weightKg: 120, createdAt: new Date('2026-01-03') }),
+      validParticipant({ email: 'top@example.com', heightCm: 200, weightKg: 140, createdAt: new Date('2026-01-04') }),
     ])
   })
 
@@ -41,21 +43,17 @@ describe('GET /participants', () => {
     expect(response.json().total).toBe(4)
     expect(response.json().items[0]).toEqual({
       id: expect.any(String),
-      email: 'empty@example.com',
-      firstName: null,
-      lastName: null,
-      birthDate: null,
-      heightCm: null,
-      weightKg: null,
-      bmi: null,
+      email: 'top@example.com',
+      firstName: 'Ada',
+      lastName: 'Example',
+      phone: '+1 555 0100',
+      birthDate: '1990-12-10',
+      heightCm: 200,
+      weightKg: 140,
+      bmi: 35,
       createdAt: '2026-01-04T00:00:00.000Z',
     })
-    expect(await listEmails()).toEqual([
-      'empty@example.com',
-      'high@example.com',
-      'mid@example.com',
-      'low@example.com',
-    ])
+    expect(await listEmails()).toEqual(['top@example.com', 'high@example.com', 'mid@example.com', 'low@example.com'])
   })
 
   it('filters by a BMI range, including both ends', async () => {
@@ -65,18 +63,18 @@ describe('GET /participants', () => {
     expect(await listEmails('?minBmi=25&maxBmi=30')).toEqual(['high@example.com', 'mid@example.com'])
   })
 
-  it('sorts by BMI in either direction, with missing BMIs always last', async () => {
+  it('sorts by BMI in either direction', async () => {
     expect(await listEmails('?sort=bmi&order=asc')).toEqual([
       'low@example.com',
       'mid@example.com',
       'high@example.com',
-      'empty@example.com',
+      'top@example.com',
     ])
     expect(await listEmails('?sort=bmi&order=desc')).toEqual([
+      'top@example.com',
       'high@example.com',
       'mid@example.com',
       'low@example.com',
-      'empty@example.com',
     ])
   })
 

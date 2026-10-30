@@ -1,8 +1,10 @@
 # 0009. Run questionnaire side effects on submit
 
-- Status: Accepted
+- Status: Rejected
 - Date: 2026-10-30
 - Related: [0005](0005-api-architecture.md), [0007](0007-store-questionnaires-as-json-documents.md), [0008](0008-store-participants-with-a-generated-bmi.md)
+
+> Rejected before implementation. The app only needs a fixed participant registration form, so dynamic questionnaires added complexity the brief does not ask for. Revisit if participants have to answer configurable forms.
 
 ## Context
 

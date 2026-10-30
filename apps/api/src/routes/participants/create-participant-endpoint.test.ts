@@ -2,6 +2,7 @@ import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import type { App } from '../../app.ts'
 import { auditEvents } from '../../data/tables/audit-events.ts'
 import { buildTestApp } from '../../test/build-test-app.ts'
+import { validParticipant } from '../../test/valid-participant.ts'
 
 describe('POST /participants', () => {
   let app: App
@@ -20,20 +21,20 @@ describe('POST /participants', () => {
 
   // ----------------------------------------- TESTS -----------------------------------------------
 
-  it('creates a participant and returns it with its BMI', async () => {
-    const response = await app.inject({
-      method: 'POST',
-      url: '/participants',
-      payload: { email: 'Ada@Example.com', firstName: 'Ada', heightCm: 180, weightKg: 81 },
-    })
+  // Registers a participant through the API, the same way the web form does.
+  const register = (payload: object) => app.inject({ method: 'POST', url: '/participants', payload })
+
+  it('registers a participant and returns it with its BMI', async () => {
+    const response = await register(validParticipant({ email: 'Ada@Example.com' }))
 
     expect(response.statusCode).toBe(201)
     expect(response.json()).toEqual({
       id: expect.any(String),
       email: 'ada@example.com',
       firstName: 'Ada',
-      lastName: null,
-      birthDate: null,
+      lastName: 'Example',
+      phone: '+1 555 0100',
+      birthDate: '1990-12-10',
       heightCm: 180,
       weightKg: 81,
       bmi: expect.closeTo(25, 5),
@@ -41,33 +42,8 @@ describe('POST /participants', () => {
     })
   })
 
-  it('creates a participant from just an email, leaving the rest of the profile empty', async () => {
-    const response = await app.inject({
-      method: 'POST',
-      url: '/participants',
-      payload: { email: 'ada@example.com' },
-    })
-
-    expect(response.statusCode).toBe(201)
-    expect(response.json()).toEqual({
-      id: expect.any(String),
-      email: 'ada@example.com',
-      firstName: null,
-      lastName: null,
-      birthDate: null,
-      heightCm: null,
-      weightKg: null,
-      bmi: null,
-      createdAt: expect.any(String),
-    })
-  })
-
-  it('records who created the participant and with which values', async () => {
-    const response = await app.inject({
-      method: 'POST',
-      url: '/participants',
-      payload: { email: 'ada@example.com', heightCm: 180, weightKg: 81 },
-    })
+  it('records who registered the participant and with which values', async () => {
+    const response = await register(validParticipant())
 
     const events = await app.db.select().from(auditEvents)
     expect(events).toEqual([
@@ -79,6 +55,10 @@ describe('POST /participants', () => {
         entityId: response.json().id,
         changes: {
           email: { from: null, to: 'ada@example.com' },
+          firstName: { from: null, to: 'Ada' },
+          lastName: { from: null, to: 'Example' },
+          phone: { from: null, to: '+1 555 0100' },
+          birthDate: { from: null, to: '1990-12-10' },
           heightCm: { from: null, to: 180 },
           weightKg: { from: null, to: 81 },
         },
@@ -89,40 +69,41 @@ describe('POST /participants', () => {
     ])
   })
 
-  it('rejects an invalid body with the fields that are wrong', async () => {
-    const response = await app.inject({
-      method: 'POST',
-      url: '/participants',
-      payload: { email: 'not-an-email', heightCm: 0, nickname: 'ada' },
-    })
+  it('rejects a registration with part of the profile missing', async () => {
+    const response = await register({ email: 'ada@example.com' })
 
     expect(response.statusCode).toBe(400)
     expect(response.json().errors.map((error: { path: string }) => error.path)).toEqual(
-      expect.arrayContaining(['email', 'heightCm']),
+      expect.arrayContaining(['firstName', 'lastName', 'phone', 'birthDate', 'heightCm', 'weightKg']),
+    )
+  })
+
+  it('rejects invalid values with the fields that are wrong', async () => {
+    const response = await register(
+      validParticipant({ email: 'not-an-email', heightCm: 0, birthDate: '2999-01-01', nickname: 'ada' }),
+    )
+
+    expect(response.statusCode).toBe(400)
+    expect(response.json().errors.map((error: { path: string }) => error.path)).toEqual(
+      expect.arrayContaining(['email', 'heightCm', 'birthDate']),
     )
     expect(await app.db.select().from(auditEvents)).toEqual([])
   })
 
   it('rejects an email that is already registered, whatever its casing', async () => {
-    await app.inject({ method: 'POST', url: '/participants', payload: { email: 'ada@example.com' } })
+    await register(validParticipant())
 
-    const response = await app.inject({
-      method: 'POST',
-      url: '/participants',
-      payload: { email: 'ADA@example.com' },
-    })
+    const response = await register(validParticipant({ email: 'ADA@example.com' }))
 
     expect(response.statusCode).toBe(409)
     expect(response.json().detail).toBe('A participant with this email already exists.')
     expect(await app.db.select().from(auditEvents)).toHaveLength(1)
   })
 
-  it('creates only one participant when the same email arrives twice at once', async () => {
-    const send = () => app.inject({ method: 'POST', url: '/participants', payload: { email: 'ada@example.com' } })
+  it('registers only one participant when the same email arrives twice at once', async () => {
+    const responses = await Promise.all([register(validParticipant()), register(validParticipant())])
 
-    const statuses = (await Promise.all([send(), send()])).map((response) => response.statusCode)
-
-    expect(statuses.sort()).toEqual([201, 409])
+    expect(responses.map((response) => response.statusCode).sort()).toEqual([201, 409])
     expect(await app.db.select().from(auditEvents)).toHaveLength(1)
   })
 })

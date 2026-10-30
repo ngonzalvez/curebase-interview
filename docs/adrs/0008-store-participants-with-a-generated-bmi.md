@@ -21,7 +21,7 @@ We will store participants in one table, identified by email, with height and we
 
 - Emails are unique and stored in lowercase, so the same address cannot be registered twice with different casing.
 - Height is stored in centimeters and weight in kilograms. The UI may convert units for display and input.
-- Height and weight are optional, so a participant can be created with only an email. Until both are set, BMI is empty.
+- Every profile field is required. Participants register with their full profile in one form, so BMI is always present.
 - Height and weight must be positive and have no upper bound.
 - BMI is indexed. The API never writes it.
 
