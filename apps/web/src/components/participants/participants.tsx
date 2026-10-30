@@ -1,3 +1,4 @@
+import Link from 'next/link'
 import { ApiError } from '../../api/api-error.ts'
 import { listParticipants } from '../../api/list-participants.ts'
 import { BmiFilter } from './bmi-filter.tsx'
@@ -17,7 +18,12 @@ type Props = {
 export async function Participants({ searchParams }: Props) {
   const parsed = parseListQuery(await searchParams)
   if (!parsed.success) {
-    return <p role="alert">These filters aren&apos;t valid. Check the BMI range and try again.</p>
+    return (
+      <p role="alert">
+        These filters aren&apos;t valid, for example the minimum BMI is above the maximum.{' '}
+        <Link href="/">Clear filters</Link>
+      </p>
+    )
   }
 
   const query = parsed.data
