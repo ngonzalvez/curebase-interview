@@ -1,0 +1,33 @@
+/*
+ * Colors. Components refer to these by purpose, never by value, so switching to dark
+ * mode only means changing them here.
+ */
+
+:root {
+  --color-background: #ffffff;
+  --color-text: #171717;
+  --color-text-muted: #6b7280;
+  --color-border: #e5e7eb;
+  --color-accent: #2563eb;
+  --color-on-accent: #ffffff;
+  --color-danger: #dc2626;
+  --color-success: #16a34a;
+}
+
+@media (prefers-color-scheme: dark) {
+  :root {
+    --color-background: #0a0a0a;
+    --color-text: #ededed;
+    --color-text-muted: #9ca3af;
+    --color-border: #27272a;
+    --color-accent: #3b82f6;
+    --color-on-accent: #ffffff;
+    --color-danger: #f87171;
+    --color-success: #4ade80;
+  }
+
+  /* Lets the browser draw its own controls, like date pickers, in dark colors too. */
+  html {
+    color-scheme: dark;
+  }
+}

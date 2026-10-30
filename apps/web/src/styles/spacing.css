@@ -1,0 +1,13 @@
+/* Spacing and shape. Every gap, padding and margin uses this scale, so the layout stays even. */
+
+:root {
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-6: 24px;
+  --space-8: 32px;
+  --space-10: 40px;
+
+  --radius: 6px;
+}

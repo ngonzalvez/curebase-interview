@@ -5,7 +5,8 @@ import { useRouter } from 'next/navigation'
 import { type FormEvent, useState } from 'react'
 import { ApiError } from '../../api/api-error.ts'
 import { registerParticipant } from '../../api/register-participant.ts'
-import { Field } from './field.tsx'
+import { Button } from '../ui/button.tsx'
+import { Field } from '../ui/field.tsx'
 import styles from './registration-form.module.css'
 import { toParticipantData, type Units } from './to-participant-data.ts'
 
@@ -68,10 +69,10 @@ export function RegistrationForm() {
 
       <fieldset className={styles.units}>
         <legend>Units</legend>
-        <label>
+        <label className={styles.unit}>
           <input type="radio" checked={units === 'metric'} onChange={() => setUnits('metric')} /> cm / kg
         </label>
-        <label>
+        <label className={styles.unit}>
           <input type="radio" checked={units === 'imperial'} onChange={() => setUnits('imperial')} /> in / lbs
         </label>
       </fieldset>
@@ -80,9 +81,7 @@ export function RegistrationForm() {
       <Field label={weight} name="weight" type="number" step="0.1" min="0" error={errors.weightKg} />
 
       <div className={styles.actions}>
-        <button type="submit" disabled={isSaving}>
-          {isSaving ? 'Saving…' : 'Register participant'}
-        </button>
+        <Button disabled={isSaving}>{isSaving ? 'Saving…' : 'Register participant'}</Button>
         {message && <p role={message.isError ? 'alert' : 'status'}>{message.text}</p>}
       </div>
     </form>

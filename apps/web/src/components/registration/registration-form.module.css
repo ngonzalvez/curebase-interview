@@ -1,25 +1,28 @@
+/* Fills each row with as many fields as fit, at least 220px wide each. */
 .form {
   display: grid;
   grid-template-columns: repeat(auto-fill, minmax(220px, 1fr));
-  gap: 16px;
+  gap: var(--space-4);
 }
 
 .units {
   display: flex;
-  gap: 16px;
+  gap: var(--space-4);
   align-items: center;
   border: none;
-  font-size: 14px;
+  font-size: var(--text-sm);
 }
 
-.units label {
-  flex-direction: row;
+.unit {
+  display: flex;
+  gap: var(--space-1);
   align-items: center;
 }
 
+/* The button and the result message always take a full row of their own. */
 .actions {
   grid-column: 1 / -1;
   display: flex;
-  gap: 16px;
+  gap: var(--space-4);
   align-items: center;
 }

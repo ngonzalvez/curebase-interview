@@ -1,4 +1,5 @@
 import type { ComponentProps } from 'react'
+import styles from './field.module.css'
 
 type Props = ComponentProps<'input'> & {
   label: string
@@ -14,9 +15,15 @@ export function Field({ label, name, error, ...input }: Props) {
   const errorId = `${name}-error`
 
   return (
-    <label>
+    <label className={styles.field}>
       {label}
-      <input name={name} aria-invalid={Boolean(error)} aria-describedby={error ? errorId : undefined} {...input} />
+      <input
+        className={styles.input}
+        name={name}
+        aria-invalid={Boolean(error)}
+        aria-describedby={error ? errorId : undefined}
+        {...input}
+      />
       {error && (
         <span id={errorId} role="alert">
           {error}
