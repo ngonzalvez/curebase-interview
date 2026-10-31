@@ -6,9 +6,9 @@ import { BmiFilter } from './bmi-filter.tsx'
 import { Pagination } from './pagination.tsx'
 import { ParticipantsTable } from './participants-table.tsx'
 
-type Props = {
-  searchParams: Promise<Record<string, string | string[] | undefined>>
-}
+// It receives the page's own search parameters, so it borrows the type Next.js
+// generates for the page.
+type Props = Pick<PageProps<'/'>, 'searchParams'>
 
 /**
  * The participants list: one page of the table, the links to the other pages and the
