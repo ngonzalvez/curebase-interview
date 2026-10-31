@@ -32,10 +32,10 @@ export function ParticipantsTable({ participants, query }: Props) {
             <th>Date of birth</th>
             <th>Weight (kg)</th>
             <th>Height (cm)</th>
-            <th>
+            <th aria-sort={ariaSort('bmi', query)}>
               <SortLink column="bmi" label="BMI (computed)" query={query} />
             </th>
-            <th>
+            <th aria-sort={ariaSort('createdAt', query)}>
               <SortLink column="createdAt" label="Created" query={query} />
             </th>
           </tr>
@@ -67,6 +67,10 @@ type SortLinkProps = {
   query: ListParticipantsQuery
 }
 
+/**
+ * A column heading that sorts the list by that column. A new column starts with the
+ * highest or newest first, and clicking the column that's already sorted flips it.
+ */
 function SortLink({ column, label, query }: SortLinkProps) {
   const isSorted = query.sort === column
   const order = isSorted && query.order === 'desc' ? 'asc' : 'desc'
@@ -78,4 +82,13 @@ function SortLink({ column, label, query }: SortLinkProps) {
       {arrow}
     </Link>
   )
+}
+
+/**
+ * Tells screen readers which column is sorted and in which direction, instead of
+ * leaving them to read out an arrow.
+ */
+function ariaSort(column: SortLinkProps['column'], query: ListParticipantsQuery) {
+  if (query.sort !== column) return undefined
+  return query.order === 'asc' ? 'ascending' : 'descending'
 }
