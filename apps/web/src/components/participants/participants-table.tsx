@@ -2,6 +2,7 @@ import type { ListParticipantsResponseSchema } from '@curebase/contracts/partici
 import Link from 'next/link'
 import type { z } from 'zod'
 import type { ListParticipantsQuery } from '../../api/list-participants.ts'
+import { LocalTime } from '../ui/local-time.tsx'
 import styles from './participants.module.css'
 
 type Participant = z.output<typeof ListParticipantsResponseSchema>['items'][number]
@@ -31,7 +32,7 @@ export function ParticipantsTable({ participants, query }: Props) {
             <th>Date of birth</th>
             <th>Weight (kg)</th>
             <th>Height (cm)</th>
-            <SortableHeader column="bmi" label="BMI (computed)" query={query} />
+            <SortableHeader column="bmi" label="BMI" query={query} />
             <SortableHeader column="createdAt" label="Created" query={query} />
           </tr>
         </thead>
@@ -47,7 +48,9 @@ export function ParticipantsTable({ participants, query }: Props) {
               <td>{participant.weightKg}</td>
               <td>{participant.heightCm}</td>
               <td>{participant.bmi.toFixed(1)}</td>
-              <td>{participant.createdAt.toLocaleString('en-US')}</td>
+              <td>
+                <LocalTime value={participant.createdAt} />
+              </td>
             </tr>
           ))}
         </tbody>
