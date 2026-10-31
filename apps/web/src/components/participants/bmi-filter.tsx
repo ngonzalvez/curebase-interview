@@ -39,9 +39,11 @@ export function BmiFilter({ query }: { query: ListParticipantsQuery }) {
       />
       <input type="hidden" name="sort" value={query.sort} />
       <input type="hidden" name="order" value={query.order} />
-      <Button variant="secondary">Filter</Button>
+      <Button variant="secondary" size="small">
+        Filter
+      </Button>
       {(query.minBmi !== undefined || query.maxBmi !== undefined) && (
-        <ButtonLink variant="danger" href="/participants">
+        <ButtonLink variant="danger" size="small" href="/participants">
           Clear
         </ButtonLink>
       )}

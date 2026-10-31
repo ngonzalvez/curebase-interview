@@ -1,6 +1,6 @@
 .button {
   padding: var(--space-2) var(--space-4);
-  border: none;
+  border: 1px solid transparent;
   border-radius: var(--radius);
   color: var(--color-on-button);
   font: inherit;
@@ -9,6 +9,18 @@
   text-decoration: none;
   cursor: pointer;
 }
+
+/* Sizes */
+
+.small {
+  padding: var(--space-1) var(--space-3);
+}
+
+.fullWidth {
+  width: 100%;
+}
+
+/* Variants only decide the colors, so any of them can come in any size. */
 
 .primary {
   background: var(--color-primary);
@@ -20,8 +32,7 @@
 }
 
 .subtle {
-  padding: var(--space-1) var(--space-3);
-  border: 1px solid var(--color-text-muted);
+  border-color: var(--color-text-muted);
   background: transparent;
   color: var(--color-text);
   font-weight: var(--weight-regular);
@@ -32,15 +43,10 @@
 }
 
 .danger {
-  padding: var(--space-1) var(--space-3);
-  border: 1px solid var(--color-danger);
+  border-color: var(--color-danger);
   background: transparent;
   color: var(--color-danger);
   font-weight: var(--weight-regular);
-}
-
-.fullWidth {
-  width: 100%;
 }
 
 .button:disabled {
