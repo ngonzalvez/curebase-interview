@@ -1,20 +1,7 @@
-.main {
-  width: 100%;
-  max-width: 960px;
-  margin: 0 auto;
-  padding: var(--space-8) var(--space-4);
+/* The title on the left and the add button on the right, on one line. */
+.heading {
   display: flex;
-  flex-direction: column;
-  gap: var(--space-8);
-}
-
-.main h1 {
-  font-size: var(--text-xl);
-  font-weight: var(--weight-semibold);
-}
-
-.main h2 {
-  font-size: var(--text-lg);
-  font-weight: var(--weight-semibold);
-  margin-bottom: var(--space-3);
+  justify-content: space-between;
+  align-items: center;
+  gap: var(--space-4);
 }

@@ -1,7 +1,6 @@
 'use client'
 
 import { CreateParticipantBodySchema } from '@curebase/contracts/participants/create-participant'
-import { useRouter } from 'next/navigation'
 import { type FormEvent, useCallback, useState } from 'react'
 import { ApiError } from '../../api/api-error.ts'
 import { registerParticipant } from '../../api/register-participant.ts'
@@ -18,11 +17,10 @@ type FieldErrors = Record<string, string>
  * schema as the API, so most mistakes are caught before anything is sent. The API
  * still has the final word: a duplicate email or anything the browser missed comes
  * back as an error and is shown next to the field it belongs to, or under the button
- * when it isn't about one field. After a successful registration the form clears, a
- * toast confirms it, and the list below refreshes.
+ * when it isn't about one field. After a successful registration the form clears and a
+ * toast confirms it, ready for the next participant.
  */
 export function RegistrationForm() {
-  const router = useRouter()
   const [units, setUnits] = useState<Units>('metric')
   const [errors, setErrors] = useState<FieldErrors>({})
   const [formError, setFormError] = useState<string>()
@@ -53,7 +51,6 @@ export function RegistrationForm() {
       form.reset()
       setErrors({})
       setConfirmation(`${participant.firstName} ${participant.lastName} was registered.`)
-      router.refresh()
     } catch (error) {
       if (!(error instanceof ApiError)) {
         setFormError('The server could not be reached. Please try again.')
