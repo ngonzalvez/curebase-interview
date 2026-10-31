@@ -24,3 +24,13 @@
 .input[aria-invalid='true'] {
   border-color: var(--color-danger);
 }
+
+.compact {
+  color: var(--color-text-muted);
+  font-weight: var(--weight-regular);
+}
+
+.compact .input {
+  width: 120px;
+  padding: var(--space-1) var(--space-2);
+}

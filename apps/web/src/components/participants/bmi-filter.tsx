@@ -18,6 +18,7 @@ export function BmiFilter({ query }: { query: ListParticipantsQuery }) {
     // always show what the list is actually filtered by.
     <Form key={`${query.minBmi}-${query.maxBmi}`} action="/participants" className={styles.filter}>
       <Field
+        compact
         label="Min BMI"
         name="minBmi"
         type="number"
@@ -27,6 +28,7 @@ export function BmiFilter({ query }: { query: ListParticipantsQuery }) {
         placeholder="e.g. 18.5"
       />
       <Field
+        compact
         label="Max BMI"
         name="maxBmi"
         type="number"
@@ -37,7 +39,7 @@ export function BmiFilter({ query }: { query: ListParticipantsQuery }) {
       />
       <input type="hidden" name="sort" value={query.sort} />
       <input type="hidden" name="order" value={query.order} />
-      <Button variant="secondary">Filter</Button>
+      <Button variant="subtle">Filter</Button>
       {(query.minBmi !== undefined || query.maxBmi !== undefined) && (
         <Link className={styles.clear} href="/participants">
           Clear

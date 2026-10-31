@@ -5,18 +5,22 @@ type Props = ComponentProps<'input'> & {
   label: string
   name: string
   error?: string
+  compact?: boolean
 }
 
 /**
  * A labelled input with room for its error message underneath. The input is marked
  * invalid and linked to the message, so screen readers announce what's wrong. The
  * className goes on the outer label, so a layout can place the field where it wants.
+ * Compact fields are smaller and quieter, for toolbars rather than forms.
  */
-export function Field({ label, name, error, className, ...input }: Props) {
+export function Field({ label, name, error, compact = false, className, ...input }: Props) {
   const errorId = `${name}-error`
 
   return (
-    <label className={[styles.field, className].filter(Boolean).join(' ')}>
+    <label
+      className={[styles.field, compact && styles.compact, className].filter(Boolean).join(' ')}
+    >
       {label}
       <input
         className={styles.input}
