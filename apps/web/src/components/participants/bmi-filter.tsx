@@ -6,7 +6,7 @@ import styles from './participants.module.css'
 
 /**
  * Filters the list by a BMI range. It's an ordinary GET form, so submitting it just
- * navigates to a URL like /?minBmi=18.5&maxBmi=25, which the list then reads. The
+ * navigates to a URL like /participants?minBmi=18.5&maxBmi=25, which the list then reads. The
  * current sort is kept, and the list goes back to its first page.
  */
 export function BmiFilter({ query }: { query: ListParticipantsQuery }) {
@@ -14,7 +14,7 @@ export function BmiFilter({ query }: { query: ListParticipantsQuery }) {
     // The inputs only read their default once. Keying the form on the current filters
     // rebuilds it when the URL changes, like after Back or Clear filters, so the inputs
     // always show what the list is actually filtered by.
-    <Form key={`${query.minBmi}-${query.maxBmi}`} action="/" className={styles.filter}>
+    <Form key={`${query.minBmi}-${query.maxBmi}`} action="/participants" className={styles.filter}>
       <Field
         label="Min BMI"
         name="minBmi"

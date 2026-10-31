@@ -8,7 +8,7 @@ import { ParticipantsTable } from './participants-table.tsx'
 
 // It receives the page's own search parameters, so it borrows the type Next.js
 // generates for the page.
-type Props = Pick<PageProps<'/'>, 'searchParams'>
+type Props = Pick<PageProps<'/participants'>, 'searchParams'>
 
 /**
  * The participants list: one page of the table, the links to the other pages and the
@@ -21,7 +21,7 @@ export async function Participants({ searchParams }: Props) {
     return (
       <p role="alert">
         These filters aren&apos;t valid, for example the minimum BMI is above the maximum.{' '}
-        <Link href="/">Clear filters</Link>
+        <Link href="/participants">Clear filters</Link>
       </p>
     )
   }
