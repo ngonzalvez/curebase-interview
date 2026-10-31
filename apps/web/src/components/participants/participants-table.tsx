@@ -2,7 +2,7 @@ import type { ListParticipantsResponseSchema } from '@curebase/contracts/partici
 import Link from 'next/link'
 import type { z } from 'zod'
 import type { ListParticipantsQuery } from '../../api/list-participants.ts'
-import { listHref } from './list-query.ts'
+import { listHref } from '../../lib/list-href.ts'
 import styles from './participants.module.css'
 
 type Participant = z.output<typeof ListParticipantsResponseSchema>['items'][number]
@@ -73,7 +73,7 @@ function SortLink({ column, label, query }: SortLinkProps) {
   const arrow = isSorted ? (query.order === 'desc' ? ' ↓' : ' ↑') : ''
 
   return (
-    <Link href={listHref(query, { sort: column, order })}>
+    <Link href={listHref('/', query, { sort: column, order })}>
       {label}
       {arrow}
     </Link>

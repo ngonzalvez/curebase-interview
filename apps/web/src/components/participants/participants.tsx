@@ -1,8 +1,9 @@
+import { ListParticipantsQuerySchema } from '@curebase/contracts/participants/list-participants'
 import Link from 'next/link'
 import { ApiError } from '../../api/api-error.ts'
 import { listParticipants } from '../../api/list-participants.ts'
+import { parseSearchParams } from '../../lib/parse-search-params.ts'
 import { BmiFilter } from './bmi-filter.tsx'
-import { parseListQuery } from './list-query.ts'
 import { Pagination } from './pagination.tsx'
 import { ParticipantsTable } from './participants-table.tsx'
 
@@ -16,7 +17,7 @@ type Props = {
  * current, and filtering or paging is just following a link to a new URL.
  */
 export async function Participants({ searchParams }: Props) {
-  const parsed = parseListQuery(await searchParams)
+  const parsed = parseSearchParams(ListParticipantsQuerySchema, await searchParams)
   if (!parsed.success) {
     return (
       <p role="alert">
