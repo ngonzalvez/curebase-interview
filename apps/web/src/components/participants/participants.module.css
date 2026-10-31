@@ -25,14 +25,20 @@
 
 .pagination {
   display: flex;
+  justify-content: space-between;
+  align-items: center;
   gap: var(--space-4);
-  justify-content: center;
   margin-top: var(--space-3);
+}
+
+.count {
+  color: var(--color-text-muted);
   font-size: var(--text-sm);
 }
 
-.pagination a {
-  color: var(--color-primary);
+.pages {
+  display: flex;
+  gap: var(--space-2);
 }
 
 /* The filter sits in one row above the table, wrapping onto two on narrow screens. */
