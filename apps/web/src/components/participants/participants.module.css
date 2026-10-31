@@ -44,13 +44,6 @@
   margin-bottom: var(--space-3);
 }
 
-.clear {
-  align-self: center;
-  color: var(--color-text-muted);
-  font-size: var(--text-sm);
-  text-decoration: none;
-}
-
 /* The table has more columns than a phone screen is wide, so it scrolls sideways there. */
 .scroll {
   overflow-x: auto;

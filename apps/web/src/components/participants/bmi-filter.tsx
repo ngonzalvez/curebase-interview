@@ -1,7 +1,7 @@
 import Form from 'next/form'
-import Link from 'next/link'
 import type { ListParticipantsQuery } from '../../api/list-participants.ts'
 import { Button } from '../ui/button.tsx'
+import { ButtonLink } from '../ui/button-link.tsx'
 import { Field } from '../ui/field.tsx'
 import styles from './participants.module.css'
 
@@ -41,9 +41,9 @@ export function BmiFilter({ query }: { query: ListParticipantsQuery }) {
       <input type="hidden" name="order" value={query.order} />
       <Button variant="subtle">Filter</Button>
       {(query.minBmi !== undefined || query.maxBmi !== undefined) && (
-        <Link className={styles.clear} href="/participants">
+        <ButtonLink variant="subtle" href="/participants">
           Clear
-        </Link>
+        </ButtonLink>
       )}
     </Form>
   )
