@@ -20,7 +20,7 @@
   width: 100%;
 }
 
-/* Variants only decide the colors, so any of them can come in any size. */
+/* Variants only set colors, and sizes only set spacing, so any variant comes in any size. */
 
 .primary {
   background: var(--color-primary);
@@ -35,7 +35,6 @@
   border-color: var(--color-text-muted);
   background: transparent;
   color: var(--color-text);
-  font-weight: var(--weight-regular);
 }
 
 .subtle:hover {
@@ -46,7 +45,6 @@
   border-color: var(--color-danger);
   background: transparent;
   color: var(--color-danger);
-  font-weight: var(--weight-regular);
 }
 
 .button:disabled {
