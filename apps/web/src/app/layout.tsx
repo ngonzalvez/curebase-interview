@@ -1,6 +1,5 @@
 import type { Metadata } from 'next'
 import { Geist } from 'next/font/google'
-import Link from 'next/link'
 import './globals.css'
 import styles from './layout.module.css'
 
@@ -18,20 +17,13 @@ export const metadata: Metadata = {
 
 /**
  * The HTML shell around every page: the language, the font, the global styles and the
- * app's name at the top, which always leads back to the participants.
+ * page width.
  */
 export default function RootLayout({ children }: LayoutProps<'/'>) {
   return (
     <html lang="en" className={geistSans.variable}>
       <body>
-        <div className={styles.shell}>
-          <header>
-            <Link className={styles.appName} href="/participants">
-              Clinical Trial Participant Capture
-            </Link>
-          </header>
-          <main className={styles.main}>{children}</main>
-        </div>
+        <main className={styles.main}>{children}</main>
       </body>
     </html>
   )
