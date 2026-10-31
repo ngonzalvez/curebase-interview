@@ -1,21 +1,22 @@
 import type { ListParticipantsResponseSchema } from '@curebase/contracts/participants/list-participants'
 import Link from 'next/link'
 import type { z } from 'zod'
-import { type ParticipantsParams, participantsHref } from '../../app/search-params.ts'
+import type { ListParticipantsQuery } from '../../api/list-participants.ts'
+import { listHref } from '../../lib/list-href.ts'
 import styles from './participants.module.css'
 
 type Participant = z.output<typeof ListParticipantsResponseSchema>['items'][number]
 
 type Props = {
   participants: Participant[]
-  params: ParticipantsParams
+  query: ListParticipantsQuery
 }
 
 /**
  * One page of participants. BMI and registration date can be sorted by clicking their
  * headings; clicking the column that's already sorted flips the order.
  */
-export function ParticipantsTable({ participants, params }: Props) {
+export function ParticipantsTable({ participants, query }: Props) {
   if (participants.length === 0) {
     return <p>No participants match these filters.</p>
   }
@@ -32,10 +33,10 @@ export function ParticipantsTable({ participants, params }: Props) {
             <th>Weight (kg)</th>
             <th>Height (cm)</th>
             <th>
-              <SortLink column="bmi" label="BMI (computed)" params={params} />
+              <SortLink column="bmi" label="BMI (computed)" query={query} />
             </th>
             <th>
-              <SortLink column="createdAt" label="Created" params={params} />
+              <SortLink column="createdAt" label="Created" query={query} />
             </th>
           </tr>
         </thead>
@@ -61,19 +62,18 @@ export function ParticipantsTable({ participants, params }: Props) {
 }
 
 type SortLinkProps = {
-  column: ParticipantsParams['sort']
+  column: ListParticipantsQuery['sort']
   label: string
-  params: ParticipantsParams
+  query: ListParticipantsQuery
 }
 
-// A new order starts again from the first page, so the offset goes back to 0.
-function SortLink({ column, label, params }: SortLinkProps) {
-  const isSorted = params.sort === column
-  const order = isSorted && params.order === 'desc' ? 'asc' : 'desc'
-  const arrow = isSorted ? (params.order === 'desc' ? ' ↓' : ' ↑') : ''
+function SortLink({ column, label, query }: SortLinkProps) {
+  const isSorted = query.sort === column
+  const order = isSorted && query.order === 'desc' ? 'asc' : 'desc'
+  const arrow = isSorted ? (query.order === 'desc' ? ' ↓' : ' ↑') : ''
 
   return (
-    <Link href={participantsHref('/', { ...params, sort: column, order, offset: 0 })}>
+    <Link href={listHref('/', query, { sort: column, order })}>
       {label}
       {arrow}
     </Link>

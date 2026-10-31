@@ -1,7 +1,7 @@
 import Form from 'next/form'
+import type { ListParticipantsQuery } from '../../api/list-participants.ts'
 import { Button } from '../ui/button.tsx'
 import { Field } from '../ui/field.tsx'
-import type { ParticipantsParams } from '../../app/search-params.ts'
 import styles from './participants.module.css'
 
 /**
@@ -9,7 +9,7 @@ import styles from './participants.module.css'
  * navigates to a URL like /?minBmi=18.5&maxBmi=25, which the list then reads. The
  * current sort is kept, and the list goes back to its first page.
  */
-export function BmiFilter({ params }: { params: ParticipantsParams }) {
+export function BmiFilter({ query }: { query: ListParticipantsQuery }) {
   return (
     <Form action="/" className={styles.filter}>
       <Field
@@ -18,7 +18,7 @@ export function BmiFilter({ params }: { params: ParticipantsParams }) {
         type="number"
         step="0.1"
         min="0"
-        defaultValue={params.minBmi ?? undefined}
+        defaultValue={query.minBmi}
         placeholder="e.g. 18.5"
       />
       <Field
@@ -27,11 +27,11 @@ export function BmiFilter({ params }: { params: ParticipantsParams }) {
         type="number"
         step="0.1"
         min="0"
-        defaultValue={params.maxBmi ?? undefined}
+        defaultValue={query.maxBmi}
         placeholder="e.g. 24.9"
       />
-      <input type="hidden" name="sort" value={params.sort} />
-      <input type="hidden" name="order" value={params.order} />
+      <input type="hidden" name="sort" value={query.sort} />
+      <input type="hidden" name="order" value={query.order} />
       <div>
         <Button variant="secondary">Filter</Button>
       </div>
