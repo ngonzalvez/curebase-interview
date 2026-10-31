@@ -3,7 +3,7 @@ import type { ComponentProps } from 'react'
 import styles from './button.module.css'
 
 type Props = ComponentProps<typeof Link> & {
-  variant?: 'primary' | 'secondary' | 'subtle'
+  variant?: 'primary' | 'secondary' | 'subtle' | 'danger'
 }
 
 /**
