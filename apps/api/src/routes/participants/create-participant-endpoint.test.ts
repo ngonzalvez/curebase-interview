@@ -1,6 +1,6 @@
 import { afterEach, beforeEach, describe, expect, it } from 'vitest'
 import type { App } from '../../app.ts'
-import { auditEvents } from '../../data/tables/audit-events.ts'
+import { participants } from '../../data/tables/participants.ts'
 import { buildTestApp } from '../../test/build-test-app.ts'
 import { validParticipant } from '../../test/valid-participant.ts'
 
@@ -43,33 +43,6 @@ describe('POST /participants', () => {
     })
   })
 
-  it('records who registered the participant and with which values', async () => {
-    const response = await register(validParticipant())
-
-    const events = await app.db.select().from(auditEvents)
-    expect(events).toEqual([
-      {
-        id: expect.any(String),
-        actor: 'anonymous',
-        action: 'participant.created',
-        entityType: 'participant',
-        entityId: response.json().id,
-        changes: {
-          email: { from: null, to: 'ada@example.com' },
-          firstName: { from: null, to: 'Ada' },
-          lastName: { from: null, to: 'Example' },
-          phone: { from: null, to: '+1 555 0100' },
-          birthDate: { from: null, to: '1990-12-10' },
-          heightCm: { from: null, to: 180 },
-          weightKg: { from: null, to: 81 },
-        },
-        reason: null,
-        requestId: expect.any(String),
-        createdAt: expect.any(Date),
-      },
-    ])
-  })
-
   it('says which fields are missing, in words a person can act on', async () => {
     const response = await register({ email: 'ada@example.com' })
 
@@ -98,7 +71,7 @@ describe('POST /participants', () => {
     expect(response.json().errors.map((error: { path: string }) => error.path)).toEqual(
       expect.arrayContaining(['email', 'heightCm', 'birthDate']),
     )
-    expect(await app.db.select().from(auditEvents)).toEqual([])
+    expect(await app.db.select().from(participants)).toEqual([])
   })
 
   it('rejects an email that is already registered, whatever its casing', async () => {
@@ -108,7 +81,7 @@ describe('POST /participants', () => {
 
     expect(response.statusCode).toBe(409)
     expect(response.json().detail).toBe('A participant with this email already exists.')
-    expect(await app.db.select().from(auditEvents)).toHaveLength(1)
+    expect(await app.db.select().from(participants)).toHaveLength(1)
   })
 
   it('registers only one participant when the same email arrives twice at once', async () => {
@@ -118,6 +91,6 @@ describe('POST /participants', () => {
     ])
 
     expect(responses.map((response) => response.statusCode).sort()).toEqual([201, 409])
-    expect(await app.db.select().from(auditEvents)).toHaveLength(1)
+    expect(await app.db.select().from(participants)).toHaveLength(1)
   })
 })

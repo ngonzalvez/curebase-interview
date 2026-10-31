@@ -63,20 +63,19 @@ before sending.
 safe to show and the fields that failed, so the form can show each error next to its input.
 Unexpected errors are logged in full on the server and return a bare 500.
 
-**Audit trail**: registering a participant writes an audit event in the same transaction:
-who did it, when, the request id, and every value set. The `audit_events` table is append-only,
-and a database trigger rejects updates and deletes.
-
 ## Known gaps
 
 Things a real deployment would still need, left out on purpose:
 
-- **Authentication and authorization.** Audit events record the actor as `anonymous` until
-  staff sign in. Reads aren't audited yet for the same reason: they would only say "anonymous".
+- **Authentication and authorization.** Anyone who can reach the app can register and read
+  participants.
+- **An audit trail.** Healthcare data usually needs a record of who created, changed or viewed
+  each record, and when. It would be an append-only table written in the same transaction as
+  each change, with the actor coming from authentication, so it belongs with that work.
 - **A least-privilege database role.** The API connects as the table owner. In production it
-  should use a role that can only read and insert on `audit_events`.
+  should use a role with only the permissions it needs.
 - **Regulatory review.** If this data counts as clinical trial records, FDA 21 CFR Part 11 and
-  ICH GCP apply. Edits would then need a reason for the change, and the audit trail would need a
-  retention policy. That's a call for compliance, not engineering.
+  ICH GCP apply, which require that audit trail, with old and new values and a reason for each
+  change. That's a call for compliance, not engineering.
 - **Edit and delete** aren't implemented. Phone numbers are checked loosely, not against an
   international format.

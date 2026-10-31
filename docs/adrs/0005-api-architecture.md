@@ -31,18 +31,18 @@ data/participants/
   insert-participant.ts
 ```
 
-- **Endpoints** run the use case: validate with `packages/contracts`, apply rules from `packages/domain`, run the transaction, call data functions and write audit events.
+- **Endpoints** run the use case: validate with `packages/contracts`, apply rules from `packages/domain`, run transactions when several writes must succeed together, and call data functions.
 - **Data functions** read and write rows, with no business rules. They use database verbs: `insert`, `find`, `update`, `delete`.
 - Endpoints import data functions, never the reverse.
-- Audit events are written in the same transaction as the change.
+- Audit events, when added, are written in the same transaction as the change.
 - Endpoints throw typed errors. One error handler maps them to HTTP statuses and hides internal details on 500s.
-- Authentication and authorization are not implemented yet. When they are, a plugin will set `request.actor` and endpoints will check permissions. Until then, audit events use a placeholder actor.
+- Authentication and authorization are not implemented yet. When they are, a plugin will set `request.actor` and endpoints will check permissions.
 
 We chose it because:
 
 - One function per file keeps code easy to find, test and change.
 - HTTP is the only entry point, so a service layer would only forward calls.
-- A shared transaction means a change is never saved without its audit event.
+- Endpoints own transactions, so a change and its audit event can be saved together once auditing is added.
 
 ## Consequences
 

@@ -20,6 +20,6 @@ export async function buildTestApp(addRoutes?: (app: App) => void) {
   const app = buildApp(testConfig)
   addRoutes?.(app)
   await app.ready()
-  await app.db.execute(sql`TRUNCATE participants, audit_events`)
+  await app.db.execute(sql`TRUNCATE participants`)
   return app
 }
