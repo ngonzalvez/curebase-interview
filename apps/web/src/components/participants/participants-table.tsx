@@ -2,7 +2,6 @@ import type { ListParticipantsResponseSchema } from '@curebase/contracts/partici
 import Link from 'next/link'
 import type { z } from 'zod'
 import type { ListParticipantsQuery } from '../../api/list-participants.ts'
-import { listHref } from '../../lib/list-href.ts'
 import styles from './participants.module.css'
 
 type Participant = z.output<typeof ListParticipantsResponseSchema>['items'][number]
@@ -66,7 +65,7 @@ type SortableHeaderProps = {
 /**
  * A column heading that sorts the list by that column. A new column starts with the
  * highest or newest first, and clicking the column that's already sorted flips it.
- * The heading tells screen readers how it's sorted, so they don't read out the arrow.
+ * A new order starts again from the first page. The heading tells screen readers how it's sorted, so they don't read out the arrow.
  */
 function SortableHeader({ column, label, query }: SortableHeaderProps) {
   const isSorted = query.sort === column
@@ -75,7 +74,7 @@ function SortableHeader({ column, label, query }: SortableHeaderProps) {
 
   return (
     <th aria-sort={isSorted ? direction : undefined}>
-      <Link href={listHref('/', query, { sort: column, order: nextOrder })}>
+      <Link href={{ query: { ...query, sort: column, order: nextOrder, offset: 0 } }}>
         {label}
         {isSorted && (query.order === 'asc' ? ' ↑' : ' ↓')}
       </Link>

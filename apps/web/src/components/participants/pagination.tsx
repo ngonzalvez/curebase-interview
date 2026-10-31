@@ -1,6 +1,5 @@
 import Link from 'next/link'
 import type { ListParticipantsQuery } from '../../api/list-participants.ts'
-import { listHref } from '../../lib/list-href.ts'
 import styles from './participants.module.css'
 
 type Props = {
@@ -22,12 +21,12 @@ export function Pagination({ query, total }: Props) {
   return (
     <nav className={styles.pagination} aria-label="Pages">
       {offset > 0 && (
-        <Link href={listHref('/', query, { offset: Math.max(offset - limit, 0) })}>← Previous</Link>
+        <Link href={{ query: { ...query, offset: Math.max(offset - limit, 0) } }}>← Previous</Link>
       )}
       <span>
         {first}–{last} of {total}
       </span>
-      {last < total && <Link href={listHref('/', query, { offset: offset + limit })}>Next →</Link>}
+      {last < total && <Link href={{ query: { ...query, offset: offset + limit } }}>Next →</Link>}
     </nav>
   )
 }
