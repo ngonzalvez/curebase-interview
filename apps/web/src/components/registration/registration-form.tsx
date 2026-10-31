@@ -8,7 +8,8 @@ import { Button } from '../ui/button.tsx'
 import { Field } from '../ui/field.tsx'
 import { Toast } from '../ui/toast.tsx'
 import styles from './registration-form.module.css'
-import { toParticipantData, type Units } from './to-participant-data.ts'
+import type { Units } from '../../lib/units.ts'
+import { toParticipantData } from './to-participant-data.ts'
 
 type FieldErrors = Record<string, string>
 

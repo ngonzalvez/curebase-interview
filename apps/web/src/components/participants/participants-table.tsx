@@ -2,6 +2,7 @@ import type { ListParticipantsResponseSchema } from '@curebase/contracts/partici
 import Link from 'next/link'
 import type { z } from 'zod'
 import type { ListParticipantsQuery } from '../../api/list-participants.ts'
+import { fromCentimeters, fromKilograms, unitLabels, type Units } from '../../lib/units.ts'
 import { LocalTime } from '../ui/local-time.tsx'
 import styles from './participants.module.css'
 
@@ -10,13 +11,15 @@ type Participant = z.output<typeof ListParticipantsResponseSchema>['items'][numb
 type Props = {
   participants: Participant[]
   query: ListParticipantsQuery
+  units: Units
 }
 
 /**
- * One page of participants. BMI and registration date can be sorted by clicking their
- * headings; clicking the column that's already sorted flips the order.
+ * One page of participants, with heights and weights shown in the units the viewer
+ * chose. BMI and registration date can be sorted by clicking their headings; clicking
+ * the column that's already sorted flips the order.
  */
-export function ParticipantsTable({ participants, query }: Props) {
+export function ParticipantsTable({ participants, query, units }: Props) {
   if (participants.length === 0) {
     return <p>No participants match these filters.</p>
   }
@@ -30,8 +33,8 @@ export function ParticipantsTable({ participants, query }: Props) {
             <th>Email</th>
             <th>Phone</th>
             <th>Date of birth</th>
-            <th>Weight (kg)</th>
-            <th>Height (cm)</th>
+            <th>Weight ({unitLabels[units].weight})</th>
+            <th>Height ({unitLabels[units].height})</th>
             <SortableHeader column="bmi" label="BMI" query={query} />
             <SortableHeader column="createdAt" label="Created" query={query} />
           </tr>
@@ -45,8 +48,8 @@ export function ParticipantsTable({ participants, query }: Props) {
               <td>{participant.email}</td>
               <td>{participant.phone}</td>
               <td>{participant.birthDate}</td>
-              <td>{participant.weightKg}</td>
-              <td>{participant.heightCm}</td>
+              <td>{fromKilograms(participant.weightKg, units)}</td>
+              <td>{fromCentimeters(participant.heightCm, units)}</td>
               <td>{participant.bmi.toFixed(1)}</td>
               <td>
                 <LocalTime value={participant.createdAt} />

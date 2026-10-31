@@ -1,9 +1,5 @@
 import type { ParticipantData } from '../../api/register-participant.ts'
-
-export type Units = 'metric' | 'imperial'
-
-const CM_PER_INCH = 2.54
-const KG_PER_POUND = 0.45359237
+import { toCentimeters, toKilograms, type Units } from '../../lib/units.ts'
 
 /**
  * Turns what was typed into the registration form into the data the API expects.
@@ -14,9 +10,9 @@ const KG_PER_POUND = 0.45359237
  */
 export function toParticipantData(form: FormData, units: Units): Partial<ParticipantData> {
   const text = (name: string) => String(form.get(name) ?? '').trim() || undefined
-  const number = (name: string, factor: number) => {
+  const number = (name: string, convert: (value: number, units: Units) => number) => {
     const value = text(name)
-    return value === undefined ? undefined : round(Number(value) * factor)
+    return value === undefined ? undefined : convert(Number(value), units)
   }
 
   return {
@@ -25,11 +21,7 @@ export function toParticipantData(form: FormData, units: Units): Partial<Partici
     lastName: text('lastName'),
     phone: text('phone'),
     birthDate: text('birthDate'),
-    heightCm: number('height', units === 'imperial' ? CM_PER_INCH : 1),
-    weightKg: number('weight', units === 'imperial' ? KG_PER_POUND : 1),
+    heightCm: number('height', toCentimeters),
+    weightKg: number('weight', toKilograms),
   }
-}
-
-function round(value: number) {
-  return Math.round(value * 10) / 10
 }
