@@ -15,7 +15,8 @@
 }
 
 .secondary {
-  background: var(--color-secondary);
+  background: var(--color-text);
+  color: var(--color-background);
 }
 
 .subtle {
