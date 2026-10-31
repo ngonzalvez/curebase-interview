@@ -1,22 +1,21 @@
 import type { ListParticipantsResponseSchema } from '@curebase/contracts/participants/list-participants'
 import Link from 'next/link'
 import type { z } from 'zod'
-import type { ListParticipantsQuery } from '../../api/list-participants.ts'
-import { listHref } from '../../lib/list-href.ts'
+import { type ParticipantsParams, participantsHref } from './participants-params.ts'
 import styles from './participants.module.css'
 
 type Participant = z.output<typeof ListParticipantsResponseSchema>['items'][number]
 
 type Props = {
   participants: Participant[]
-  query: ListParticipantsQuery
+  params: ParticipantsParams
 }
 
 /**
  * One page of participants. BMI and registration date can be sorted by clicking their
  * headings; clicking the column that's already sorted flips the order.
  */
-export function ParticipantsTable({ participants, query }: Props) {
+export function ParticipantsTable({ participants, params }: Props) {
   if (participants.length === 0) {
     return <p>No participants match these filters.</p>
   }
@@ -33,10 +32,10 @@ export function ParticipantsTable({ participants, query }: Props) {
             <th>Weight (kg)</th>
             <th>Height (cm)</th>
             <th>
-              <SortLink column="bmi" label="BMI (computed)" query={query} />
+              <SortLink column="bmi" label="BMI (computed)" params={params} />
             </th>
             <th>
-              <SortLink column="createdAt" label="Created" query={query} />
+              <SortLink column="createdAt" label="Created" params={params} />
             </th>
           </tr>
         </thead>
@@ -62,18 +61,19 @@ export function ParticipantsTable({ participants, query }: Props) {
 }
 
 type SortLinkProps = {
-  column: ListParticipantsQuery['sort']
+  column: ParticipantsParams['sort']
   label: string
-  query: ListParticipantsQuery
+  params: ParticipantsParams
 }
 
-function SortLink({ column, label, query }: SortLinkProps) {
-  const isSorted = query.sort === column
-  const order = isSorted && query.order === 'desc' ? 'asc' : 'desc'
-  const arrow = isSorted ? (query.order === 'desc' ? ' ↓' : ' ↑') : ''
+// A new order starts again from the first page, so the offset goes back to 0.
+function SortLink({ column, label, params }: SortLinkProps) {
+  const isSorted = params.sort === column
+  const order = isSorted && params.order === 'desc' ? 'asc' : 'desc'
+  const arrow = isSorted ? (params.order === 'desc' ? ' ↓' : ' ↑') : ''
 
   return (
-    <Link href={listHref('/', query, { sort: column, order })}>
+    <Link href={participantsHref('/', { ...params, sort: column, order, offset: 0 })}>
       {label}
       {arrow}
     </Link>

@@ -6,7 +6,7 @@ import { ApiError } from './api-error.ts'
 type RequestOptions<T extends z.ZodType> = {
   schema: T
   method?: 'GET' | 'POST'
-  query?: Record<string, string | number | undefined>
+  query?: Record<string, string | number | null | undefined>
   body?: unknown
 }
 
