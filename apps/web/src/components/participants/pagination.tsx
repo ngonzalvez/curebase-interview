@@ -1,5 +1,5 @@
 import Link from 'next/link'
-import { type ParticipantsParams, participantsHref } from './participants-params.ts'
+import { type ParticipantsParams, participantsHref } from '../../app/search-params.ts'
 import styles from './participants.module.css'
 
 type Props = {

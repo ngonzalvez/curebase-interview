@@ -1,7 +1,7 @@
 import Form from 'next/form'
 import { Button } from '../ui/button.tsx'
 import { Field } from '../ui/field.tsx'
-import type { ParticipantsParams } from './participants-params.ts'
+import type { ParticipantsParams } from '../../app/search-params.ts'
 import styles from './participants.module.css'
 
 /**

@@ -3,7 +3,7 @@ import { ApiError } from '../../api/api-error.ts'
 import { listParticipants } from '../../api/list-participants.ts'
 import { BmiFilter } from './bmi-filter.tsx'
 import { Pagination } from './pagination.tsx'
-import { loadParticipantsParams } from './participants-params.ts'
+import { loadParticipantsParams } from '../../app/search-params.ts'
 import { ParticipantsTable } from './participants-table.tsx'
 
 type Props = {

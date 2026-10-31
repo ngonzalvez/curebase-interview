@@ -1,5 +1,5 @@
 import { describe, expect, it } from 'vitest'
-import { loadParticipantsParams, participantsHref } from './participants-params.ts'
+import { loadParticipantsParams, participantsHref } from './search-params.ts'
 
 describe('participants URL parameters', () => {
   // ----------------------------------------- TESTS -----------------------------------------------
