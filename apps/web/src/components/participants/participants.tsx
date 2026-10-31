@@ -33,7 +33,9 @@ export async function Participants({ searchParams }: Props) {
 
   return (
     <>
-      <BmiFilter query={query} />
+      {/* The filter starts from the URL. Keying it on the filters resets it when the URL
+          changes, like after Back or Clear, so it always shows what the list is filtered by. */}
+      <BmiFilter key={`${query.minBmi}-${query.maxBmi}`} query={query} />
       <ParticipantsTable participants={page.items} query={query} />
       <Pagination query={query} total={page.total} />
     </>
