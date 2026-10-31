@@ -32,12 +32,8 @@ export function ParticipantsTable({ participants, query }: Props) {
             <th>Date of birth</th>
             <th>Weight (kg)</th>
             <th>Height (cm)</th>
-            <th aria-sort={ariaSort('bmi', query)}>
-              <SortLink column="bmi" label="BMI (computed)" query={query} />
-            </th>
-            <th aria-sort={ariaSort('createdAt', query)}>
-              <SortLink column="createdAt" label="Created" query={query} />
-            </th>
+            <SortableHeader column="bmi" label="BMI (computed)" query={query} />
+            <SortableHeader column="createdAt" label="Created" query={query} />
           </tr>
         </thead>
         <tbody>
@@ -61,7 +57,7 @@ export function ParticipantsTable({ participants, query }: Props) {
   )
 }
 
-type SortLinkProps = {
+type SortableHeaderProps = {
   column: ListParticipantsQuery['sort']
   label: string
   query: ListParticipantsQuery
@@ -70,25 +66,19 @@ type SortLinkProps = {
 /**
  * A column heading that sorts the list by that column. A new column starts with the
  * highest or newest first, and clicking the column that's already sorted flips it.
+ * The heading tells screen readers how it's sorted, so they don't read out the arrow.
  */
-function SortLink({ column, label, query }: SortLinkProps) {
+function SortableHeader({ column, label, query }: SortableHeaderProps) {
   const isSorted = query.sort === column
-  const order = isSorted && query.order === 'desc' ? 'asc' : 'desc'
-  const arrow = isSorted ? (query.order === 'desc' ? ' ↓' : ' ↑') : ''
+  const nextOrder = isSorted && query.order === 'desc' ? 'asc' : 'desc'
+  const direction = query.order === 'asc' ? 'ascending' : 'descending'
 
   return (
-    <Link href={listHref('/', query, { sort: column, order })}>
-      {label}
-      {arrow}
-    </Link>
+    <th aria-sort={isSorted ? direction : undefined}>
+      <Link href={listHref('/', query, { sort: column, order: nextOrder })}>
+        {label}
+        {isSorted && (query.order === 'asc' ? ' ↑' : ' ↓')}
+      </Link>
+    </th>
   )
-}
-
-/**
- * Tells screen readers which column is sorted and in which direction, instead of
- * leaving them to read out an arrow.
- */
-function ariaSort(column: SortLinkProps['column'], query: ListParticipantsQuery) {
-  if (query.sort !== column) return undefined
-  return query.order === 'asc' ? 'ascending' : 'descending'
 }
