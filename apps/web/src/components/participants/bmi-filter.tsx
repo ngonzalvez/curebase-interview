@@ -11,7 +11,10 @@ import styles from './participants.module.css'
  */
 export function BmiFilter({ query }: { query: ListParticipantsQuery }) {
   return (
-    <Form action="/" className={styles.filter}>
+    // The inputs only read their default once. Keying the form on the current filters
+    // rebuilds it when the URL changes, like after Back or Clear filters, so the inputs
+    // always show what the list is actually filtered by.
+    <Form key={`${query.minBmi}-${query.maxBmi}`} action="/" className={styles.filter}>
       <Field
         label="Min BMI"
         name="minBmi"
