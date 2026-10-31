@@ -11,8 +11,8 @@ import { ParticipantsTable } from './participants-table.tsx'
 type Props = Pick<PageProps<'/participants'>, 'searchParams'>
 
 /**
- * The participants list: one page of the table, the links to the other pages and the
- * BMI filter. It renders on the server for every request, so the data is always
+ * The participants list: the BMI filter, one page of the table and the links to the
+ * other pages. It renders on the server for every request, so the data is always
  * current, and filtering or paging is just following a link to a new URL.
  */
 export async function Participants({ searchParams }: Props) {
@@ -33,9 +33,9 @@ export async function Participants({ searchParams }: Props) {
 
   return (
     <>
+      <BmiFilter query={query} />
       <ParticipantsTable participants={page.items} query={query} />
       <Pagination query={query} total={page.total} />
-      <BmiFilter query={query} />
     </>
   )
 }

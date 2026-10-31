@@ -1,11 +1,13 @@
 import Form from 'next/form'
+import Link from 'next/link'
 import type { ListParticipantsQuery } from '../../api/list-participants.ts'
 import { Button } from '../ui/button.tsx'
 import { Field } from '../ui/field.tsx'
 import styles from './participants.module.css'
 
 /**
- * Filters the list by a BMI range. It's an ordinary GET form, so submitting it just
+ * The toolbar above the list, filtering it by a BMI range, with a way to clear the
+ * filter once one is set. It's an ordinary GET form, so submitting it just
  * navigates to a URL like /participants?minBmi=18.5&maxBmi=25, which the list then reads. The
  * current sort is kept, and the list goes back to its first page.
  */
@@ -35,9 +37,12 @@ export function BmiFilter({ query }: { query: ListParticipantsQuery }) {
       />
       <input type="hidden" name="sort" value={query.sort} />
       <input type="hidden" name="order" value={query.order} />
-      <div>
-        <Button variant="secondary">Filter</Button>
-      </div>
+      <Button variant="secondary">Filter</Button>
+      {(query.minBmi !== undefined || query.maxBmi !== undefined) && (
+        <Link className={styles.clear} href="/participants">
+          Clear
+        </Link>
+      )}
     </Form>
   )
 }
